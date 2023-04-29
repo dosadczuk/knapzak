@@ -146,3 +146,11 @@ func ExampleIndexOf() {
 	// Output:
 	// index: 2
 }
+
+func ExampleLast() {
+	value, found := slices.Last([]int{1, 2, 3, 4, 5})
+	fmt.Printf("value: %v, found: %t", value, found)
+
+	// Output:
+	// value: 5, found: true
+}
