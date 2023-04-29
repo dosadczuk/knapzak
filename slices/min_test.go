@@ -10,39 +10,39 @@ import (
 	"github.com/dosadczuk/knapzak/slices"
 )
 
-func TestMax(t *testing.T) {
+func TestMin(t *testing.T) {
 	t.Run("empty slice", func(t *testing.T) {
 		var vals []int
 
 		want := 0
-		have := slices.Max(vals)
+		have := slices.Min(vals)
 
 		AssertEqual(t, want, have)
 	})
 	t.Run("slice of primitives", func(t *testing.T) {
 		vals := []int{3, 2, 1, 4, 5}
 
-		want := 5
-		have := slices.Max(vals)
+		want := 1
+		have := slices.Min(vals)
 
 		AssertEqual(t, want, have)
 	})
 }
 
-func TestMaxFunc(t *testing.T) {
+func TestMinFunc(t *testing.T) {
 	t.Run("empty slice", func(t *testing.T) {
 		var vals []int
 
 		want := 0
-		have := slices.MaxFunc(vals, func(a, b int) int { return a - b })
+		have := slices.MinFunc(vals, func(a, b int) int { return a - b })
 
 		AssertEqual(t, want, have)
 	})
 	t.Run("slice of primitives", func(t *testing.T) {
 		vals := []int{3, 2, 1, 4, 5}
 
-		want := 5
-		have := slices.MaxFunc(
+		want := 1
+		have := slices.MinFunc(
 			vals,
 			func(a, b int) int {
 				if a == b {
@@ -64,8 +64,8 @@ func TestMaxFunc(t *testing.T) {
 			{Scheme: "https", Host: "google.com"},
 		}
 
-		want := vals[1]
-		have := slices.MaxFunc(vals, func(a, b url.URL) int {
+		want := vals[0]
+		have := slices.MinFunc(vals, func(a, b url.URL) int {
 			return strings.Compare(a.Scheme, b.Scheme)
 		})
 
@@ -77,8 +77,8 @@ func TestMaxFunc(t *testing.T) {
 			&url.URL{Scheme: "https", Host: "google.com"},
 		}
 
-		want := vals[1]
-		have := slices.MaxFunc(vals, func(a, b fmt.Stringer) int {
+		want := vals[0]
+		have := slices.MinFunc(vals, func(a, b fmt.Stringer) int {
 			return strings.Compare(a.String(), b.String())
 		})
 

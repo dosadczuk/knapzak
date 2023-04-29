@@ -19,7 +19,7 @@ func Max[S ~[]E, E constraints.Ordered](vals S) (max E) {
 	return
 }
 
-// MaxFunc returns the larges value from the elements, comparing
+// MaxFunc returns the largest value from the elements, comparing
 // with the given Comparator function.
 func MaxFunc[S ~[]E, E any](vals S, compare Comparator[E]) (max E) {
 	if len(vals) == 0 {

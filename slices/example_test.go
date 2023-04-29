@@ -213,6 +213,34 @@ func ExampleMaxFunc() {
 	// max: 5
 }
 
+func ExampleMin() {
+	min := slices.Min([]int{3, 2, 1, 4, 5})
+	fmt.Printf("min: %v", min)
+
+	// Output:
+	// min: 1
+}
+
+func ExampleMinFunc() {
+	min := slices.MinFunc(
+		[]int{3, 2, 1, 4, 5},
+		func(a, b int) int {
+			if a == b {
+				return 0
+			}
+			if a < b {
+				return -1
+			} else {
+				return +1
+			}
+		},
+	)
+	fmt.Printf("min: %v", min)
+
+	// Output:
+	// min: 1
+}
+
 func ExampleNone() {
 	values := []int{1, 2, 3, 4, 5, 6, 7, 8, 9, 10}
 
