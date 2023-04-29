@@ -200,16 +200,29 @@ func ExampleNone() {
 }
 
 func ExampleReduce() {
-	sum := slices.Reduce(
-		[]int{1, 2, 3, 4, 5},
-		func(acc int, val int) int {
+	order := slices.Reduce(
+		[]string{"1", "2", "3", "4", "5"},
+		func(acc string, val string) string {
 			return acc + val
 		},
 	)
-	fmt.Printf("sum: %v", sum)
+	fmt.Printf("order: %v", order)
 
 	// Output:
-	// sum: 15
+	// order: 12345
+}
+
+func ExampleReduceRight() {
+	order := slices.ReduceRight(
+		[]string{"1", "2", "3", "4", "5"},
+		func(acc string, val string) string {
+			return acc + val
+		},
+	)
+	fmt.Printf("order: %v", order)
+
+	// Output:
+	// order: 54321
 }
 
 func ExampleReverse() {

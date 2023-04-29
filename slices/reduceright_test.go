@@ -8,12 +8,12 @@ import (
 	"github.com/dosadczuk/knapzak/slices"
 )
 
-func TestReduce(t *testing.T) {
+func TestReduceRight(t *testing.T) {
 	t.Run("empty slice", func(t *testing.T) {
 		var vals []int
 
 		want := 0
-		have := slices.Reduce(vals, func(acc int, val int) int { return acc + val })
+		have := slices.ReduceRight(vals, func(acc int, val int) int { return acc + val })
 
 		AssertEqual(t, want, have)
 	})
@@ -21,7 +21,7 @@ func TestReduce(t *testing.T) {
 		vals := []int{1, 2, 3, 4, 5}
 
 		want := 15
-		have := slices.Reduce(vals, func(acc int, val int) int { return acc + val })
+		have := slices.ReduceRight(vals, func(acc int, val int) int { return acc + val })
 
 		AssertEqual(t, want, have)
 	})
@@ -31,8 +31,8 @@ func TestReduce(t *testing.T) {
 			{Scheme: "https", Host: "google.com"},
 		}
 
-		want := url.URL{Scheme: "http", Host: "google.com"}
-		have := slices.Reduce(
+		want := url.URL{Scheme: "https", Host: "localhost"}
+		have := slices.ReduceRight(
 			vals,
 			func(acc url.URL, val url.URL) url.URL {
 				acc.Host = val.Host
