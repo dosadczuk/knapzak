@@ -10,20 +10,20 @@ import (
 	"github.com/dosadczuk/knapzak/slices"
 )
 
-func TestIndexOf(t *testing.T) {
+func TestLastIndexOf(t *testing.T) {
 	t.Run("empty slice", func(t *testing.T) {
 		var vals []int
 
 		want := -1
-		have := slices.IndexOf(vals, 0)
+		have := slices.LastIndexOf(vals, 0)
 
 		AssertEqual(t, want, have)
 	})
 	t.Run("slice of primitives", func(t *testing.T) {
 		vals := []int{1, 4, 3, 4, 5}
 
-		want := 1
-		have := slices.IndexOf(vals, 4)
+		want := 3
+		have := slices.LastIndexOf(vals, 4)
 
 		AssertEqual(t, want, have)
 	})
@@ -37,7 +37,7 @@ func TestIndexOf(t *testing.T) {
 		}
 
 		want := -1
-		have := slices.IndexOf(vals, time.Now())
+		have := slices.LastIndexOf(vals, time.Now())
 
 		AssertEqual(t, want, have)
 	})
@@ -51,7 +51,7 @@ func TestIndexOf(t *testing.T) {
 		}
 
 		want := 3
-		have := slices.IndexOf(vals, vals[3])
+		have := slices.LastIndexOf(vals, vals[3])
 
 		AssertEqual(t, want, have)
 	})

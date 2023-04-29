@@ -206,11 +206,11 @@ func ExampleGroupBy() {
 }
 
 func ExampleIndexOf() {
-	index := slices.IndexOf([]int{1, 2, 3, 4, 5}, 3)
+	index := slices.IndexOf([]int{1, 4, 3, 4, 5}, 4)
 	fmt.Printf("index: %v", index)
 
 	// Output:
-	// index: 2
+	// index: 1
 }
 
 func ExampleLast() {
@@ -219,6 +219,14 @@ func ExampleLast() {
 
 	// Output:
 	// value: 5, found: true
+}
+
+func ExampleLastIndexOf() {
+	index := slices.LastIndexOf([]int{1, 4, 3, 4, 5}, 4)
+	fmt.Printf("index: %v", index)
+
+	// Output:
+	// index: 3
 }
 
 func ExampleMap() {
