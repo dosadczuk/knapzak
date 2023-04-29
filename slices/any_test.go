@@ -20,6 +20,14 @@ func TestAny(t *testing.T) {
 
 		AssertEqual(t, want, have)
 	})
+	t.Run("no predicate", func(t *testing.T) {
+		vals := []int{1, 2, 3, 4, 5}
+
+		want := true
+		have := slices.Any(vals, nil)
+
+		AssertEqual(t, want, have)
+	})
 	t.Run("slice of primitives", func(t *testing.T) {
 		vals := []int{1, 2, 3, 4, 5}
 

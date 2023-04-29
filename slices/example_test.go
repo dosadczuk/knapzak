@@ -20,15 +20,16 @@ func ExampleAll() {
 }
 
 func ExampleAny() {
-	matches := slices.Any(
-		[]int{1, 2, 3, 4, 5, 6, 7, 8, 9, 10},
-		func(num int) bool {
-			return num > 0
-		},
-	)
+	values := []int{1, 2, 3, 4, 5, 6, 7, 8, 9, 10}
+
+	notEmpty := slices.Any(values, nil)
+	fmt.Printf("not empty: %t\n", notEmpty)
+
+	matches := slices.Any(values, func(num int) bool { return num > 0 })
 	fmt.Printf("matches: %t", matches)
 
 	// Output:
+	// not empty: true
 	// matches: true
 }
 
