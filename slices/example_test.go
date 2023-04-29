@@ -185,6 +185,34 @@ func ExampleMap() {
 	// mapped: [9 8 7 6 5]
 }
 
+func ExampleMax() {
+	max := slices.Max([]int{3, 2, 1, 4, 5})
+	fmt.Printf("max: %v", max)
+
+	// Output:
+	// max: 5
+}
+
+func ExampleMaxFunc() {
+	max := slices.MaxFunc(
+		[]int{3, 2, 1, 4, 5},
+		func(a, b int) int {
+			if a == b {
+				return 0
+			}
+			if a < b {
+				return -1
+			} else {
+				return +1
+			}
+		},
+	)
+	fmt.Printf("max: %v", max)
+
+	// Output:
+	// max: 5
+}
+
 func ExampleNone() {
 	values := []int{1, 2, 3, 4, 5, 6, 7, 8, 9, 10}
 
