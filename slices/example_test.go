@@ -186,15 +186,16 @@ func ExampleMap() {
 }
 
 func ExampleNone() {
-	matches := slices.None(
-		[]int{1, 2, 3, 4, 5, 6, 7, 8, 9, 10},
-		func(num int) bool {
-			return num > 0
-		},
-	)
+	values := []int{1, 2, 3, 4, 5, 6, 7, 8, 9, 10}
+
+	empty := slices.None(values, nil)
+	fmt.Printf("empty: %t\n", empty)
+
+	matches := slices.None(values, func(num int) bool { return num > 0 })
 	fmt.Printf("matches: %t", matches)
 
 	// Output:
+	// empty: false
 	// matches: false
 }
 
