@@ -44,3 +44,11 @@ func ExampleAssociate() {
 	// Output:
 	// number is even: map[1:false 2:true 3:false 4:true 5:false]
 }
+
+func ExampleContains() {
+	contains := slices.Contains([]int{1, 2, 3, 4, 5}, 2)
+	fmt.Printf("contains: %t", contains)
+
+	// Output:
+	// contains: true
+}
