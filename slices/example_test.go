@@ -170,3 +170,16 @@ func ExampleLast() {
 	// Output:
 	// value: 5, found: true
 }
+
+func ExampleMap() {
+	mapped := slices.Map(
+		[]int{1, 2, 3, 4, 5},
+		func(num int) int {
+			return 10 - num
+		},
+	)
+	fmt.Printf("mapped: %v", mapped)
+
+	// Output:
+	// mapped: [9 8 7 6 5]
+}
