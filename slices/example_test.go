@@ -52,3 +52,11 @@ func ExampleContains() {
 	// Output:
 	// contains: true
 }
+
+func ExampleIndexOf() {
+	index := slices.IndexOf([]int{1, 2, 3, 4, 5}, 3)
+	fmt.Printf("index: %v", index)
+
+	// Output:
+	// index: 2
+}
