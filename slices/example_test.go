@@ -140,6 +140,14 @@ func ExampleFirst() {
 	// value: 1, found: true
 }
 
+func ExampleFlatten() {
+	flattened := slices.Flatten([][]int{{1}, {1, 2}, {2, 3}})
+	fmt.Printf("flattened: %v", flattened)
+
+	// Output:
+	// flattened: [1 1 2 2 3]
+}
+
 func ExampleFold() {
 	order := slices.Fold(
 		[]string{"1", "2", "3", "4", "5"},
