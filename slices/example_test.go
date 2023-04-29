@@ -139,6 +139,22 @@ func ExampleFirst() {
 	// value: 1, found: true
 }
 
+func ExampleForEach() {
+	slices.ForEach(
+		[]int{1, 2, 3, 4, 5},
+		func(idx int, num int) {
+			fmt.Printf("index: %v, value: %v\n", idx, num)
+		},
+	)
+
+	// Output:
+	// index: 0, value: 1
+	// index: 1, value: 2
+	// index: 2, value: 3
+	// index: 3, value: 4
+	// index: 4, value: 5
+}
+
 func ExampleIndexOf() {
 	index := slices.IndexOf([]int{1, 2, 3, 4, 5}, 3)
 	fmt.Printf("index: %v", index)
