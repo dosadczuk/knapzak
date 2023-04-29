@@ -184,6 +184,19 @@ func ExampleForEach() {
 	// index: 4, value: 5
 }
 
+func ExampleGroupBy() {
+	grouped := slices.GroupBy(
+		[]int{1, 2, 3, 4},
+		func(num int) int {
+			return num % 2
+		},
+	)
+	fmt.Printf("grouped by remainder: %v", grouped)
+
+	// Output:
+	// grouped by remainder: map[0:[2 4] 1:[1 3]]
+}
+
 func ExampleIndexOf() {
 	index := slices.IndexOf([]int{1, 2, 3, 4, 5}, 3)
 	fmt.Printf("index: %v", index)
