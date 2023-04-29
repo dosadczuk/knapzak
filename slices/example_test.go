@@ -131,6 +131,14 @@ func ExampleFindLastIndex() {
 	// index: 3, found: true
 }
 
+func ExampleFirst() {
+	value, found := slices.First([]int{1, 2, 3, 4, 5})
+	fmt.Printf("value: %v, found: %t", value, found)
+
+	// Output:
+	// value: 1, found: true
+}
+
 func ExampleIndexOf() {
 	index := slices.IndexOf([]int{1, 2, 3, 4, 5}, 3)
 	fmt.Printf("index: %v", index)
