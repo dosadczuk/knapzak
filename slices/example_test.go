@@ -140,6 +140,20 @@ func ExampleFirst() {
 	// value: 1, found: true
 }
 
+func ExampleFold() {
+	order := slices.Fold(
+		[]string{"1", "2", "3", "4", "5"},
+		"order: ",
+		func(acc string, val string) string {
+			return acc + val
+		},
+	)
+	fmt.Println(order)
+
+	// Output:
+	// order: 12345
+}
+
 func ExampleForEach() {
 	slices.ForEach(
 		[]int{1, 2, 3, 4, 5},
