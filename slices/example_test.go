@@ -154,6 +154,20 @@ func ExampleFold() {
 	// order: 12345
 }
 
+func ExampleFoldRight() {
+	order := slices.FoldRight(
+		[]string{"1", "2", "3", "4", "5"},
+		"order: ",
+		func(acc string, val string) string {
+			return acc + val
+		},
+	)
+	fmt.Println(order)
+
+	// Output:
+	// order: 54321
+}
+
 func ExampleForEach() {
 	slices.ForEach(
 		[]int{1, 2, 3, 4, 5},
