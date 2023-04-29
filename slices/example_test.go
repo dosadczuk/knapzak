@@ -118,6 +118,19 @@ func ExampleFindLast() {
 	// value: 4, found: true
 }
 
+func ExampleFindLastIndex() {
+	index, found := slices.FindLastIndex(
+		[]int{1, 2, 3, 4, 5},
+		func(num int) bool {
+			return num%2 == 0
+		},
+	)
+	fmt.Printf("index: %v, found: %t", index, found)
+
+	// Output:
+	// index: 3, found: true
+}
+
 func ExampleIndexOf() {
 	index := slices.IndexOf([]int{1, 2, 3, 4, 5}, 3)
 	fmt.Printf("index: %v", index)
