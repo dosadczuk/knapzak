@@ -183,3 +183,12 @@ func ExampleMap() {
 	// Output:
 	// mapped: [9 8 7 6 5]
 }
+
+func ExampleReverse() {
+	values := []int{1, 2, 3, 4, 5}
+	slices.Reverse(values)
+	fmt.Printf("reversed: %v", values)
+
+	// Output:
+	// reversed: [5 4 3 2 1]
+}
