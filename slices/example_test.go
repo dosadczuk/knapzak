@@ -312,6 +312,19 @@ func ExampleNone() {
 	// matches: false
 }
 
+func ExamplePartition() {
+	l, ge := slices.Partition(
+		[]int{1, 2, 3, 4, 5, 6, 7, 8, 9, 10},
+		func(num int) bool {
+			return num < 6
+		},
+	)
+	fmt.Printf("less than 6: %v, greater or equal than 6: %v", l, ge)
+
+	// Output:
+	// less than 6: [1 2 3 4 5], greater or equal than 6: [6 7 8 9 10]
+}
+
 func ExampleReduce() {
 	order := slices.Reduce(
 		[]string{"1", "2", "3", "4", "5"},
