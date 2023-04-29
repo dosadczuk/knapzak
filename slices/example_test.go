@@ -199,6 +199,19 @@ func ExampleNone() {
 	// matches: false
 }
 
+func ExampleReduce() {
+	sum := slices.Reduce(
+		[]int{1, 2, 3, 4, 5},
+		func(acc int, val int) int {
+			return acc + val
+		},
+	)
+	fmt.Printf("sum: %v", sum)
+
+	// Output:
+	// sum: 15
+}
+
 func ExampleReverse() {
 	values := []int{1, 2, 3, 4, 5}
 	slices.Reverse(values)
