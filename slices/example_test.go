@@ -192,3 +192,11 @@ func ExampleReverse() {
 	// Output:
 	// reversed: [5 4 3 2 1]
 }
+
+func ExampleReversed() {
+	reversed := slices.Reversed([]int{1, 2, 3, 4, 5})
+	fmt.Printf("reversed: %v", reversed)
+
+	// Output:
+	// reversed: [5 4 3 2 1]
+}
