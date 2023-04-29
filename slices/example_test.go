@@ -184,6 +184,19 @@ func ExampleMap() {
 	// mapped: [9 8 7 6 5]
 }
 
+func ExampleNone() {
+	matches := slices.None(
+		[]int{1, 2, 3, 4, 5, 6, 7, 8, 9, 10},
+		func(num int) bool {
+			return num > 0
+		},
+	)
+	fmt.Printf("matches: %t", matches)
+
+	// Output:
+	// matches: false
+}
+
 func ExampleReverse() {
 	values := []int{1, 2, 3, 4, 5}
 	slices.Reverse(values)
