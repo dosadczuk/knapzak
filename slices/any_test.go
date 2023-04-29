@@ -38,8 +38,8 @@ func TestAny(t *testing.T) {
 		}
 
 		want := false
-		have := slices.Any(vals, func(t time.Time) bool {
-			return t.Before(time.Now())
+		have := slices.Any(vals, func(val time.Time) bool {
+			return val.Before(time.Now())
 		})
 
 		AssertEqual(t, want, have)
@@ -54,9 +54,9 @@ func TestAny(t *testing.T) {
 		}
 
 		want := true
-		have := slices.Any(vals, func(s fmt.Stringer) bool {
+		have := slices.Any(vals, func(val fmt.Stringer) bool {
 			re := regexp.MustCompile("^\\d+\\.0.0.0$")
-			return re.MatchString(s.String())
+			return re.MatchString(val.String())
 		})
 
 		AssertEqual(t, want, have)
