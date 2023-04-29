@@ -53,6 +53,19 @@ func ExampleContains() {
 	// contains: true
 }
 
+func ExampleFilter() {
+	filtered := slices.Filter(
+		[]int{1, 2, 3, 4, 5},
+		func(num int) bool {
+			return num%2 == 0
+		},
+	)
+	fmt.Printf("filtered: %v", filtered)
+
+	// Output:
+	// filtered: [2 4]
+}
+
 func ExampleIndexOf() {
 	index := slices.IndexOf([]int{1, 2, 3, 4, 5}, 3)
 	fmt.Printf("index: %v", index)
