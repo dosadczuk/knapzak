@@ -2,6 +2,7 @@ package slices_test
 
 import (
 	"fmt"
+	"net/netip"
 
 	"github.com/dosadczuk/knapzak/slices"
 )
@@ -52,6 +53,37 @@ func ExampleContains() {
 
 	// Output:
 	// contains: true
+}
+
+func ExampleEqual() {
+	equal := slices.Equal(
+		[]int{1, 2, 3, 4, 5},
+		[]int{1, 2, 3, 4, 5},
+	)
+	fmt.Printf("equal: %t", equal)
+
+	// Output:
+	// equal: true
+}
+
+func ExampleEqualFunc() {
+	equal := slices.EqualFunc(
+		[]fmt.Stringer{
+			netip.AddrFrom4([4]byte{127, 0, 0, 1}),
+			netip.AddrFrom4([4]byte{255, 0, 0, 0}),
+		},
+		[]fmt.Stringer{
+			netip.AddrFrom4([4]byte{127, 0, 0, 1}),
+			netip.AddrFrom4([4]byte{255, 0, 0, 0}),
+		},
+		func(v1 fmt.Stringer, v2 fmt.Stringer) bool {
+			return v1.String() == v2.String()
+		},
+	)
+	fmt.Printf("equal: %t", equal)
+
+	// Output:
+	// equal: true
 }
 
 func ExampleFilter() {
