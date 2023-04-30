@@ -2,6 +2,7 @@ package maps_test
 
 import (
 	"fmt"
+	"net/netip"
 	"sort"
 
 	"github.com/dosadczuk/knapzak/maps"
@@ -61,6 +62,42 @@ func ExampleContainsValue() {
 	}
 
 	result := maps.ContainsValue(values, 6)
+	fmt.Println(result)
+
+	// Output:
+	// true
+}
+
+func ExampleEqual() {
+	m1 := map[int]int{
+		1: 2,
+		2: 4,
+	}
+	m2 := map[int]int{
+		1: 2,
+		2: 4,
+	}
+
+	result := maps.Equal(m1, m2)
+	fmt.Println(result)
+
+	// Output:
+	// true
+}
+
+func ExampleEqualFunc() {
+	m1 := map[int]fmt.Stringer{
+		127: netip.AddrFrom4([4]byte{127, 0, 0, 1}),
+		255: netip.AddrFrom4([4]byte{255, 0, 0, 0}),
+	}
+	m2 := map[int]fmt.Stringer{
+		127: netip.AddrFrom4([4]byte{127, 0, 0, 1}),
+		255: netip.AddrFrom4([4]byte{255, 0, 0, 0}),
+	}
+
+	result := maps.EqualFunc(m1, m2, func(v1 fmt.Stringer, v2 fmt.Stringer) bool {
+		return v1.String() == v2.String()
+	})
 	fmt.Println(result)
 
 	// Output:
