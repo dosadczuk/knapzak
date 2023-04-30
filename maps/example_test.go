@@ -266,6 +266,22 @@ func ExampleMapKeys() {
 	// map[3:2 6:4 9:6]
 }
 
+func ExampleMapValues() {
+	values := map[int]int{
+		1: 2,
+		2: 4,
+		3: 6,
+	}
+
+	result := maps.MapValues(values, func(key int, val int) int {
+		return key + val
+	})
+	fmt.Println(result)
+
+	// Output:
+	// map[1:3 2:6 3:9]
+}
+
 func ExampleMax() {
 	values := map[int]int{
 		1: 2,
