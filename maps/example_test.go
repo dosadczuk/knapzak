@@ -67,6 +67,25 @@ func ExampleContainsValue() {
 	// true
 }
 
+func ExampleForEach() {
+	values := map[int]int{
+		1: 2,
+		2: 4,
+		3: 6,
+	}
+
+	var result []string
+	maps.ForEach(values, func(key int, val int) {
+		result = append(result, fmt.Sprintf("%v:%v", key, val))
+	})
+	sort.Strings(result) // only for `Output` purpose
+
+	fmt.Println(result)
+
+	// Output:
+	// [1:2 2:4 3:6]
+}
+
 func ExampleKeys() {
 	values := map[int]int{
 		1: 2,
