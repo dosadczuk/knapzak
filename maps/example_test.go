@@ -262,6 +262,35 @@ func ExampleMaxFunc() {
 	// 255.0.0.0
 }
 
+func ExampleMin() {
+	values := map[int]int{
+		1: 2,
+		2: 4,
+		3: 6,
+	}
+
+	result := maps.Min(values)
+	fmt.Println(result)
+
+	// Output:
+	// 2
+}
+
+func ExampleMinFunc() {
+	values := map[int]fmt.Stringer{
+		127: netip.AddrFrom4([4]byte{127, 0, 0, 1}),
+		255: netip.AddrFrom4([4]byte{255, 0, 0, 0}),
+	}
+
+	result := maps.MinFunc(values, func(v1, v2 fmt.Stringer) int {
+		return strings.Compare(v1.String(), v2.String())
+	})
+	fmt.Println(result)
+
+	// Output:
+	// 127.0.0.1
+}
+
 func ExampleNone() {
 	values := map[int]int{
 		1: 2,
