@@ -83,6 +83,22 @@ func ExampleFind() {
 	// 4 true
 }
 
+func ExampleFindKey() {
+	values := map[int]int{
+		1: 2,
+		2: 4,
+		3: 6,
+	}
+
+	result, found := maps.FindKey(values, func(_ int, val int) bool {
+		return val > 5
+	})
+	fmt.Println(result, found)
+
+	// Output:
+	// 3 true
+}
+
 func ExampleForEach() {
 	values := map[int]int{
 		1: 2,
