@@ -99,6 +99,22 @@ func ExampleFilterByKey() {
 	// map[1:2 3:6]
 }
 
+func ExampleFilterByValue() {
+	values := map[int]int{
+		1: 2,
+		2: 4,
+		3: 6,
+	}
+
+	result := maps.FilterByValue(values, func(val int) bool {
+		return val%4 == 0
+	})
+	fmt.Println(result)
+
+	// Output:
+	// map[2:4]
+}
+
 func ExampleFind() {
 	values := map[int]int{
 		1: 2,
