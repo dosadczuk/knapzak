@@ -37,3 +37,19 @@ func ExampleAny() {
 	// Output:
 	// match: true
 }
+
+func ExampleNone() {
+	values := map[int]int{
+		1: 2,
+		2: 4,
+		3: 6,
+	}
+	result := maps.None(values, func(key int, val int) bool {
+		return val%2 == 1
+	})
+
+	fmt.Printf("match: %t", result)
+
+	// Output:
+	// match: true
+}
