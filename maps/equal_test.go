@@ -73,7 +73,7 @@ func TestEqualFunc(t *testing.T) {
 		var m2 map[int]fmt.Stringer
 
 		want := true
-		have := maps.EqualFunc(m1, m2, func(_ fmt.Stringer, _ fmt.Stringer) bool { return true })
+		have := maps.EqualFunc(m1, m2, func(_, _ fmt.Stringer) bool { return true })
 
 		if !cmp.Equal(want, have) {
 			t.Error(cmp.Diff(want, have))
@@ -89,7 +89,7 @@ func TestEqualFunc(t *testing.T) {
 		}
 
 		want := false
-		have := maps.EqualFunc(m1, m2, func(_ fmt.Stringer, _ fmt.Stringer) bool { return true })
+		have := maps.EqualFunc(m1, m2, func(_, _ fmt.Stringer) bool { return true })
 
 		if !cmp.Equal(want, have) {
 			t.Error(cmp.Diff(want, have))
@@ -106,7 +106,7 @@ func TestEqualFunc(t *testing.T) {
 		}
 
 		want := false
-		have := maps.EqualFunc(m1, m2, func(v1 fmt.Stringer, v2 fmt.Stringer) bool {
+		have := maps.EqualFunc(m1, m2, func(v1, v2 fmt.Stringer) bool {
 			return v1.String() == v2.String()
 		})
 
@@ -125,7 +125,7 @@ func TestEqualFunc(t *testing.T) {
 		}
 
 		want := false
-		have := maps.EqualFunc(m1, m2, func(v1 fmt.Stringer, v2 fmt.Stringer) bool {
+		have := maps.EqualFunc(m1, m2, func(v1, v2 fmt.Stringer) bool {
 			return v1.String() == v2.String()
 		})
 
@@ -144,7 +144,7 @@ func TestEqualFunc(t *testing.T) {
 		}
 
 		want := true
-		have := maps.EqualFunc(m1, m2, func(v1 fmt.Stringer, v2 fmt.Stringer) bool {
+		have := maps.EqualFunc(m1, m2, func(v1, v2 fmt.Stringer) bool {
 			return v1.String() == v2.String()
 		})
 

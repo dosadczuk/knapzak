@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"net/netip"
 	"sort"
+	"strings"
 
 	"github.com/dosadczuk/knapzak/maps"
 )
@@ -95,7 +96,7 @@ func ExampleEqualFunc() {
 		255: netip.AddrFrom4([4]byte{255, 0, 0, 0}),
 	}
 
-	result := maps.EqualFunc(m1, m2, func(v1 fmt.Stringer, v2 fmt.Stringer) bool {
+	result := maps.EqualFunc(m1, m2, func(v1, v2 fmt.Stringer) bool {
 		return v1.String() == v2.String()
 	})
 	fmt.Println(result)
@@ -232,19 +233,33 @@ func ExampleKeys() {
 	// [1 2 3]
 }
 
-func ExampleValues() {
+func ExampleMax() {
 	values := map[int]int{
 		1: 2,
 		2: 4,
 		3: 6,
 	}
 
-	result := maps.Values(values)
-	sort.Ints(result) // only for `Output` purpose
+	result := maps.Max(values)
 	fmt.Println(result)
 
 	// Output:
-	// [2 4 6]
+	// 6
+}
+
+func ExampleMaxFunc() {
+	values := map[int]fmt.Stringer{
+		127: netip.AddrFrom4([4]byte{127, 0, 0, 1}),
+		255: netip.AddrFrom4([4]byte{255, 0, 0, 0}),
+	}
+
+	result := maps.MaxFunc(values, func(v1, v2 fmt.Stringer) int {
+		return strings.Compare(v1.String(), v2.String())
+	})
+	fmt.Println(result)
+
+	// Output:
+	// 255.0.0.0
 }
 
 func ExampleNone() {
@@ -261,4 +276,19 @@ func ExampleNone() {
 
 	// Output:
 	// true
+}
+
+func ExampleValues() {
+	values := map[int]int{
+		1: 2,
+		2: 4,
+		3: 6,
+	}
+
+	result := maps.Values(values)
+	sort.Ints(result) // only for `Output` purpose
+	fmt.Println(result)
+
+	// Output:
+	// [2 4 6]
 }
