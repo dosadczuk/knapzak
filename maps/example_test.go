@@ -13,14 +13,14 @@ func ExampleAll() {
 		2: 4,
 		3: 6,
 	}
+
 	result := maps.All(values, func(key int, val int) bool {
 		return 2*key == val
 	})
-
-	fmt.Printf("match: %t", result)
+	fmt.Println(result)
 
 	// Output:
-	// match: true
+	// true
 }
 
 func ExampleAny() {
@@ -29,14 +29,14 @@ func ExampleAny() {
 		2: 4,
 		3: 6,
 	}
+
 	result := maps.Any(values, func(key int, val int) bool {
 		return val%2 == 0
 	})
-
-	fmt.Printf("match: %t", result)
+	fmt.Println(result)
 
 	// Output:
-	// match: true
+	// true
 }
 
 func ExampleContainsKey() {
@@ -45,12 +45,12 @@ func ExampleContainsKey() {
 		2: 4,
 		3: 6,
 	}
-	result := maps.ContainsKey(values, 3)
 
-	fmt.Printf("contains: %t", result)
+	result := maps.ContainsKey(values, 3)
+	fmt.Println(result)
 
 	// Output:
-	// contains: true
+	// true
 }
 
 func ExampleContainsValue() {
@@ -59,12 +59,12 @@ func ExampleContainsValue() {
 		2: 4,
 		3: 6,
 	}
-	result := maps.ContainsValue(values, 6)
 
-	fmt.Printf("contains: %t", result)
+	result := maps.ContainsValue(values, 6)
+	fmt.Println(result)
 
 	// Output:
-	// contains: true
+	// true
 }
 
 func ExampleKeys() {
@@ -73,13 +73,13 @@ func ExampleKeys() {
 		2: 4,
 		3: 6,
 	}
+
 	result := maps.Keys(values)
 	sort.Ints(result) // only for `Output` purpose
-
-	fmt.Printf("keys: %v", result)
+	fmt.Println(result)
 
 	// Output:
-	// keys: [1 2 3]
+	// [1 2 3]
 }
 
 func ExampleValues() {
@@ -88,13 +88,13 @@ func ExampleValues() {
 		2: 4,
 		3: 6,
 	}
+
 	result := maps.Values(values)
 	sort.Ints(result) // only for `Output` purpose
-
-	fmt.Printf("keys: %v", result)
+	fmt.Println(result)
 
 	// Output:
-	// keys: [2 4 6]
+	// [2 4 6]
 }
 
 func ExampleNone() {
@@ -103,12 +103,12 @@ func ExampleNone() {
 		2: 4,
 		3: 6,
 	}
+
 	result := maps.None(values, func(key int, val int) bool {
 		return val%2 == 1
 	})
-
-	fmt.Printf("match: %t", result)
+	fmt.Println(result)
 
 	// Output:
-	// match: true
+	// true
 }
