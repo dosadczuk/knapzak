@@ -250,6 +250,23 @@ func ExampleKeys() {
 	// [1 2 3]
 }
 
+func ExampleMap() {
+	values := map[int]int{
+		1: 2,
+		2: 4,
+		3: 6,
+	}
+
+	result := maps.Map(values, func(key int, val int) int {
+		return key + val
+	})
+	sort.Ints(result) // only for `Output` purpose
+	fmt.Println(result)
+
+	// Output:
+	// [3 6 9]
+}
+
 func ExampleMapKeys() {
 	values := map[int]int{
 		1: 2,
