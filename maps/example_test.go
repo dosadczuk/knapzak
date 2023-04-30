@@ -21,3 +21,19 @@ func ExampleAll() {
 	// Output:
 	// match: true
 }
+
+func ExampleAny() {
+	values := map[int]int{
+		1: 2,
+		2: 4,
+		3: 6,
+	}
+	result := maps.Any(values, func(key int, val int) bool {
+		return val%2 == 0
+	})
+
+	fmt.Printf("match: %t", result)
+
+	// Output:
+	// match: true
+}
