@@ -67,6 +67,22 @@ func ExampleContainsValue() {
 	// true
 }
 
+func ExampleFind() {
+	values := map[int]int{
+		1: 2,
+		2: 4,
+		3: 6,
+	}
+
+	result, found := maps.Find(values, func(key int, _ int) bool {
+		return key%2 == 0
+	})
+	fmt.Println(result, found)
+
+	// Output:
+	// 4 true
+}
+
 func ExampleForEach() {
 	values := map[int]int{
 		1: 2,
