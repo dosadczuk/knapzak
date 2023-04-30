@@ -67,19 +67,6 @@ func ExampleFilter() {
 	// filtered: [2 4]
 }
 
-func ExampleFilterNot() {
-	filtered := slices.FilterNot(
-		[]int{1, 2, 3, 4, 5},
-		func(num int) bool {
-			return num%2 == 0
-		},
-	)
-	fmt.Printf("filtered: %v", filtered)
-
-	// Output:
-	// filtered: [1 3 5]
-}
-
 func ExampleFind() {
 	value, found := slices.Find(
 		[]int{1, 2, 3, 4, 5},
