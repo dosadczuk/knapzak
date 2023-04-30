@@ -38,6 +38,20 @@ func ExampleAny() {
 	// match: true
 }
 
+func ExampleContainsKey() {
+	values := map[int]int{
+		1: 2,
+		2: 4,
+		3: 6,
+	}
+	result := maps.ContainsKey(values, 2)
+
+	fmt.Printf("contains: %t", result)
+
+	// Output:
+	// contains: true
+}
+
 func ExampleNone() {
 	values := map[int]int{
 		1: 2,

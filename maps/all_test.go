@@ -8,7 +8,7 @@ import (
 )
 
 func TestAll(t *testing.T) {
-	t.Run("empty slice", func(t *testing.T) {
+	t.Run("empty map", func(t *testing.T) {
 		var vals map[int]int
 
 		want := true
@@ -18,7 +18,7 @@ func TestAll(t *testing.T) {
 			t.Error(cmp.Diff(want, have))
 		}
 	})
-	t.Run("slice with values matching predicate", func(t *testing.T) {
+	t.Run("map with values matching predicate", func(t *testing.T) {
 		vals := map[int]int{
 			1: 2,
 			2: 4,
@@ -32,7 +32,7 @@ func TestAll(t *testing.T) {
 			t.Error(cmp.Diff(want, have))
 		}
 	})
-	t.Run("slice with values not matching predicate", func(t *testing.T) {
+	t.Run("map with values not matching predicate", func(t *testing.T) {
 		vals := map[int]int{
 			1: 2,
 			2: 4,
