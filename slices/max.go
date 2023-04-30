@@ -19,16 +19,21 @@ func Max[S ~[]E, E constraints.Ordered](vals S) (max E) {
 	return
 }
 
-// MaxFunc returns the largest value from the elements, comparing
-// with the given Comparator function.
-func MaxFunc[S ~[]E, E any](vals S, compare Comparator[E]) (max E) {
+// MaxFunc returns the largest value from the elements.
+//
+// Function compares two arguments for order and returns:
+//
+//	 0 - if the arguments are equal,
+//	-1 - if the first argument is less than the second,
+//	+1 - if the second argument is less than the first.
+func MaxFunc[S ~[]E, E any](vals S, comparator func(E, E) int) (max E) {
 	if len(vals) == 0 {
 		return
 	}
 
 	max = vals[0]
 	for i := 1; i < len(vals); i++ {
-		if val := vals[i]; compare(val, max) > 0 {
+		if val := vals[i]; comparator(val, max) > 0 {
 			max = val
 		}
 	}
