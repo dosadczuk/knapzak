@@ -1,4 +1,4 @@
-module github.com/dosadczuk/knapzak
+module github.com/dosadczuk/knapzak/maps
 
 go 1.20
 
