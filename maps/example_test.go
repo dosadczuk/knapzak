@@ -2,6 +2,7 @@ package maps_test
 
 import (
 	"fmt"
+	"sort"
 
 	"github.com/dosadczuk/knapzak/maps"
 )
@@ -73,11 +74,27 @@ func ExampleKeys() {
 		3: 6,
 	}
 	result := maps.Keys(values)
+	sort.Ints(result) // only for `Output` purpose
 
 	fmt.Printf("keys: %v", result)
 
 	// Output:
 	// keys: [1 2 3]
+}
+
+func ExampleValues() {
+	values := map[int]int{
+		1: 2,
+		2: 4,
+		3: 6,
+	}
+	result := maps.Values(values)
+	sort.Ints(result) // only for `Output` purpose
+
+	fmt.Printf("keys: %v", result)
+
+	// Output:
+	// keys: [2 4 6]
 }
 
 func ExampleNone() {

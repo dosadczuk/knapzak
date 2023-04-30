@@ -8,12 +8,12 @@ import (
 	"github.com/google/go-cmp/cmp"
 )
 
-func TestKeys(t *testing.T) {
+func TestValues(t *testing.T) {
 	t.Run("empty map", func(t *testing.T) {
 		var vals map[int]int
 
 		var want []int
-		have := maps.Keys(vals)
+		have := maps.Values(vals)
 
 		if !cmp.Equal(want, have) {
 			t.Error(cmp.Diff(want, have))
@@ -22,8 +22,8 @@ func TestKeys(t *testing.T) {
 	t.Run("map with key-value pair", func(t *testing.T) {
 		vals := map[int]int{1: 2}
 
-		want := []int{1}
-		have := maps.Keys(vals)
+		want := []int{2}
+		have := maps.Values(vals)
 		sort.Ints(have)
 
 		if !cmp.Equal(want, have) {
@@ -34,7 +34,7 @@ func TestKeys(t *testing.T) {
 		vals := map[int]int{1: 2, 2: 1}
 
 		want := []int{1, 2}
-		have := maps.Keys(vals)
+		have := maps.Values(vals)
 		sort.Ints(have)
 
 		if !cmp.Equal(want, have) {
