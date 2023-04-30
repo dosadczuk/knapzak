@@ -44,7 +44,21 @@ func ExampleContainsKey() {
 		2: 4,
 		3: 6,
 	}
-	result := maps.ContainsKey(values, 2)
+	result := maps.ContainsKey(values, 3)
+
+	fmt.Printf("contains: %t", result)
+
+	// Output:
+	// contains: true
+}
+
+func ExampleContainsValue() {
+	values := map[int]int{
+		1: 2,
+		2: 4,
+		3: 6,
+	}
+	result := maps.ContainsValue(values, 6)
 
 	fmt.Printf("contains: %t", result)
 
