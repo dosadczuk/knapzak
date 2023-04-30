@@ -34,8 +34,8 @@ func TestMin(t *testing.T) {
 	t.Run("map with key-value pairs", func(t *testing.T) {
 		vals := map[int]int{
 			1: 1,
-			2: 4,
 			3: 3,
+			2: 4,
 		}
 
 		want := 1

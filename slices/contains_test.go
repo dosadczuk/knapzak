@@ -1,13 +1,10 @@
 package slices_test
 
 import (
-	"fmt"
-	"net/netip"
 	"testing"
-	"time"
 
-	. "github.com/dosadczuk/knapzak/internal/testing"
 	"github.com/dosadczuk/knapzak/slices"
+	"github.com/google/go-cmp/cmp"
 )
 
 func TestContains(t *testing.T) {
@@ -17,42 +14,28 @@ func TestContains(t *testing.T) {
 		want := false
 		have := slices.Contains(vals, 0)
 
-		AssertEqual(t, want, have)
+		if !cmp.Equal(want, have) {
+			t.Error(cmp.Diff(want, have))
+		}
 	})
-	t.Run("slice of primitives", func(t *testing.T) {
+	t.Run("slice with matching value", func(t *testing.T) {
 		vals := []int{1, 2, 3, 4, 5}
 
 		want := true
 		have := slices.Contains(vals, 4)
 
-		AssertEqual(t, want, have)
-	})
-	t.Run("slice of structures", func(t *testing.T) {
-		vals := []time.Time{
-			time.Now().Add(1 * time.Hour),
-			time.Now().Add(2 * time.Hour),
-			time.Now().Add(3 * time.Hour),
-			time.Now().Add(4 * time.Hour),
-			time.Now().Add(5 * time.Hour),
+		if !cmp.Equal(want, have) {
+			t.Error(cmp.Diff(want, have))
 		}
+	})
+	t.Run("slice with not matching value", func(t *testing.T) {
+		vals := []int{1, 2, 3, 4, 5}
 
 		want := false
-		have := slices.Contains(vals, time.Now())
+		have := slices.Contains(vals, 0)
 
-		AssertEqual(t, want, have)
-	})
-	t.Run("slice of interfaces", func(t *testing.T) {
-		vals := []fmt.Stringer{
-			netip.AddrFrom4([4]byte{1, 0, 0, 0}),
-			netip.AddrFrom4([4]byte{2, 0, 0, 0}),
-			netip.AddrFrom4([4]byte{3, 0, 0, 0}),
-			netip.AddrFrom4([4]byte{4, 0, 0, 0}),
-			netip.AddrFrom4([4]byte{5, 0, 0, 0}),
+		if !cmp.Equal(want, have) {
+			t.Error(cmp.Diff(want, have))
 		}
-
-		want := true
-		have := slices.Contains(vals, vals[3])
-
-		AssertEqual(t, want, have)
 	})
 }

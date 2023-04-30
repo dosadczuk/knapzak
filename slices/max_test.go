@@ -6,8 +6,8 @@ import (
 	"strings"
 	"testing"
 
-	. "github.com/dosadczuk/knapzak/internal/testing"
 	"github.com/dosadczuk/knapzak/slices"
+	"github.com/google/go-cmp/cmp"
 )
 
 func TestMax(t *testing.T) {
@@ -17,15 +17,29 @@ func TestMax(t *testing.T) {
 		want := 0
 		have := slices.Max(vals)
 
-		AssertEqual(t, want, have)
+		if !cmp.Equal(want, have) {
+			t.Error(cmp.Diff(want, have))
+		}
 	})
-	t.Run("slice of primitives", func(t *testing.T) {
+	t.Run("slice with value", func(t *testing.T) {
+		vals := []int{3}
+
+		want := 3
+		have := slices.Max(vals)
+
+		if !cmp.Equal(want, have) {
+			t.Error(cmp.Diff(want, have))
+		}
+	})
+	t.Run("slice with values", func(t *testing.T) {
 		vals := []int{3, 2, 1, 4, 5}
 
 		want := 5
 		have := slices.Max(vals)
 
-		AssertEqual(t, want, have)
+		if !cmp.Equal(want, have) {
+			t.Error(cmp.Diff(want, have))
+		}
 	})
 }
 
@@ -36,7 +50,31 @@ func TestMaxFunc(t *testing.T) {
 		want := 0
 		have := slices.MaxFunc(vals, func(a, b int) int { return a - b })
 
-		AssertEqual(t, want, have)
+		if !cmp.Equal(want, have) {
+			t.Error(cmp.Diff(want, have))
+		}
+	})
+	t.Run("slice of primitive", func(t *testing.T) {
+		vals := []int{3}
+
+		want := 3
+		have := slices.MaxFunc(
+			vals,
+			func(a, b int) int {
+				if a == b {
+					return 0
+				}
+				if a < b {
+					return -1
+				} else {
+					return +1
+				}
+			},
+		)
+
+		if !cmp.Equal(want, have) {
+			t.Error(cmp.Diff(want, have))
+		}
 	})
 	t.Run("slice of primitives", func(t *testing.T) {
 		vals := []int{3, 2, 1, 4, 5}
@@ -56,7 +94,9 @@ func TestMaxFunc(t *testing.T) {
 			},
 		)
 
-		AssertEqual(t, want, have)
+		if !cmp.Equal(want, have) {
+			t.Error(cmp.Diff(want, have))
+		}
 	})
 	t.Run("slice of structures", func(t *testing.T) {
 		vals := []url.URL{
@@ -69,7 +109,9 @@ func TestMaxFunc(t *testing.T) {
 			return strings.Compare(a.Scheme, b.Scheme)
 		})
 
-		AssertEqual(t, want, have)
+		if !cmp.Equal(want, have) {
+			t.Error(cmp.Diff(want, have))
+		}
 	})
 	t.Run("slice of interfaces", func(t *testing.T) {
 		vals := []fmt.Stringer{
@@ -82,6 +124,8 @@ func TestMaxFunc(t *testing.T) {
 			return strings.Compare(a.String(), b.String())
 		})
 
-		AssertEqual(t, want, have)
+		if !cmp.Equal(want, have) {
+			t.Error(cmp.Diff(want, have))
+		}
 	})
 }

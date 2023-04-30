@@ -5,8 +5,8 @@ import (
 	"net/url"
 	"testing"
 
-	. "github.com/dosadczuk/knapzak/internal/testing"
 	"github.com/dosadczuk/knapzak/slices"
+	"github.com/google/go-cmp/cmp"
 )
 
 func TestReversed(t *testing.T) {
@@ -16,7 +16,9 @@ func TestReversed(t *testing.T) {
 		var want []int
 		have := slices.Reversed(vals)
 
-		AssertEqual(t, want, have)
+		if !cmp.Equal(want, have) {
+			t.Error(cmp.Diff(want, have))
+		}
 	})
 	t.Run("slice of primitives", func(t *testing.T) {
 		vals := []int{1, 2, 3, 4, 5}
@@ -24,7 +26,9 @@ func TestReversed(t *testing.T) {
 		want := []int{5, 4, 3, 2, 1}
 		have := slices.Reversed(vals)
 
-		AssertEqual(t, want, have)
+		if !cmp.Equal(want, have) {
+			t.Error(cmp.Diff(want, have))
+		}
 	})
 	t.Run("slice of structures", func(t *testing.T) {
 		vals := []url.URL{
@@ -38,7 +42,9 @@ func TestReversed(t *testing.T) {
 		}
 		have := slices.Reversed(vals)
 
-		AssertEqual(t, want, have)
+		if !cmp.Equal(want, have) {
+			t.Error(cmp.Diff(want, have))
+		}
 	})
 	t.Run("slice of interfaces", func(t *testing.T) {
 		vals := []fmt.Stringer{
@@ -52,6 +58,8 @@ func TestReversed(t *testing.T) {
 		}
 		have := slices.Reversed(vals)
 
-		AssertEqual(t, want, have)
+		if !cmp.Equal(want, have) {
+			t.Error(cmp.Diff(want, have))
+		}
 	})
 }

@@ -5,8 +5,8 @@ import (
 	"net/url"
 	"testing"
 
-	. "github.com/dosadczuk/knapzak/internal/testing"
 	"github.com/dosadczuk/knapzak/slices"
+	"github.com/google/go-cmp/cmp"
 )
 
 func TestFlatten(t *testing.T) {
@@ -16,7 +16,9 @@ func TestFlatten(t *testing.T) {
 		var want []int
 		have := slices.Flatten(vals)
 
-		AssertEqual(t, want, have)
+		if !cmp.Equal(want, have) {
+			t.Error(cmp.Diff(want, have))
+		}
 	})
 	t.Run("slice of primitives", func(t *testing.T) {
 		vals := [][]int{{1}, {1, 2}, {2, 3}}
@@ -24,7 +26,9 @@ func TestFlatten(t *testing.T) {
 		want := []int{1, 1, 2, 2, 3}
 		have := slices.Flatten(vals)
 
-		AssertEqual(t, want, have)
+		if !cmp.Equal(want, have) {
+			t.Error(cmp.Diff(want, have))
+		}
 	})
 	t.Run("slice of structures", func(t *testing.T) {
 		vals := [][]url.URL{
@@ -41,7 +45,9 @@ func TestFlatten(t *testing.T) {
 		}
 		have := slices.Flatten(vals)
 
-		AssertEqual(t, want, have)
+		if !cmp.Equal(want, have) {
+			t.Error(cmp.Diff(want, have))
+		}
 	})
 	t.Run("slice of interfaces", func(t *testing.T) {
 		vals := [][]fmt.Stringer{
@@ -54,6 +60,8 @@ func TestFlatten(t *testing.T) {
 		}
 		have := slices.Flatten(vals)
 
-		AssertEqual(t, want, have)
+		if !cmp.Equal(want, have) {
+			t.Error(cmp.Diff(want, have))
+		}
 	})
 }

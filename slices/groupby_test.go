@@ -6,8 +6,8 @@ import (
 	"strings"
 	"testing"
 
-	. "github.com/dosadczuk/knapzak/internal/testing"
 	"github.com/dosadczuk/knapzak/slices"
+	"github.com/google/go-cmp/cmp"
 )
 
 func TestGroupBy(t *testing.T) {
@@ -17,7 +17,9 @@ func TestGroupBy(t *testing.T) {
 		var want map[int][]int
 		have := slices.GroupBy(vals, func(val int) int { return val })
 
-		AssertEqual(t, want, have)
+		if !cmp.Equal(want, have) {
+			t.Error(cmp.Diff(want, have))
+		}
 	})
 	t.Run("slice of primitives", func(t *testing.T) {
 		vals := []int{1, 2, 3, 4}
@@ -28,7 +30,9 @@ func TestGroupBy(t *testing.T) {
 		}
 		have := slices.GroupBy(vals, func(val int) int { return val % 2 })
 
-		AssertEqual(t, want, have)
+		if !cmp.Equal(want, have) {
+			t.Error(cmp.Diff(want, have))
+		}
 	})
 	t.Run("slice of structures", func(t *testing.T) {
 		vals := []url.URL{
@@ -48,7 +52,9 @@ func TestGroupBy(t *testing.T) {
 		}
 		have := slices.GroupBy(vals, func(val url.URL) string { return val.Scheme })
 
-		AssertEqual(t, want, have)
+		if !cmp.Equal(want, have) {
+			t.Error(cmp.Diff(want, have))
+		}
 	})
 	t.Run("slice of interfaces", func(t *testing.T) {
 		vals := []fmt.Stringer{
@@ -66,6 +72,8 @@ func TestGroupBy(t *testing.T) {
 			return strings.TrimPrefix(val.String(), "//")[0]
 		})
 
-		AssertEqual(t, want, have)
+		if !cmp.Equal(want, have) {
+			t.Error(cmp.Diff(want, have))
+		}
 	})
 }

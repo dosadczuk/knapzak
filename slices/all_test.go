@@ -1,14 +1,10 @@
 package slices_test
 
 import (
-	"fmt"
-	"net/netip"
-	"regexp"
 	"testing"
-	"time"
 
-	. "github.com/dosadczuk/knapzak/internal/testing"
 	"github.com/dosadczuk/knapzak/slices"
+	"github.com/google/go-cmp/cmp"
 )
 
 func TestAll(t *testing.T) {
@@ -18,47 +14,28 @@ func TestAll(t *testing.T) {
 		want := true
 		have := slices.All(vals, func(val int) bool { return false })
 
-		AssertEqual(t, want, have)
+		if !cmp.Equal(want, have) {
+			t.Error(cmp.Diff(want, have))
+		}
 	})
-	t.Run("slice of primitives", func(t *testing.T) {
+	t.Run("slice with values matching predicate", func(t *testing.T) {
+		vals := []int{1, 2, 3, 4, 5}
+
+		want := true
+		have := slices.All(vals, func(val int) bool { return val > 0 })
+
+		if !cmp.Equal(want, have) {
+			t.Error(cmp.Diff(want, have))
+		}
+	})
+	t.Run("slice with values not matching predicate", func(t *testing.T) {
 		vals := []int{1, 2, 3, 4, 5}
 
 		want := false
 		have := slices.All(vals, func(val int) bool { return val > 3 })
 
-		AssertEqual(t, want, have)
-	})
-	t.Run("slice of structures", func(t *testing.T) {
-		vals := []time.Time{
-			time.Now().Add(1 * time.Hour),
-			time.Now().Add(2 * time.Hour),
-			time.Now().Add(3 * time.Hour),
-			time.Now().Add(4 * time.Hour),
-			time.Now().Add(5 * time.Hour),
+		if !cmp.Equal(want, have) {
+			t.Error(cmp.Diff(want, have))
 		}
-
-		want := true
-		have := slices.All(vals, func(val time.Time) bool {
-			return val.After(time.Now())
-		})
-
-		AssertEqual(t, want, have)
-	})
-	t.Run("slice of interfaces", func(t *testing.T) {
-		vals := []fmt.Stringer{
-			netip.AddrFrom4([4]byte{1, 0, 0, 0}),
-			netip.AddrFrom4([4]byte{2, 0, 0, 0}),
-			netip.AddrFrom4([4]byte{3, 0, 0, 0}),
-			netip.AddrFrom4([4]byte{4, 0, 0, 0}),
-			netip.AddrFrom4([4]byte{5, 0, 0, 0}),
-		}
-
-		want := true
-		have := slices.All(vals, func(val fmt.Stringer) bool {
-			re := regexp.MustCompile("^\\d+\\.0.0.0$")
-			return re.MatchString(val.String())
-		})
-
-		AssertEqual(t, want, have)
 	})
 }

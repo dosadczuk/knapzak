@@ -6,8 +6,8 @@ import (
 	"strconv"
 	"testing"
 
-	. "github.com/dosadczuk/knapzak/internal/testing"
 	"github.com/dosadczuk/knapzak/slices"
+	"github.com/google/go-cmp/cmp"
 )
 
 func TestMap(t *testing.T) {
@@ -17,7 +17,9 @@ func TestMap(t *testing.T) {
 		var want []int
 		have := slices.Map(vals, func(val int) int { return val * 2 })
 
-		AssertEqual(t, want, have)
+		if !cmp.Equal(want, have) {
+			t.Error(cmp.Diff(want, have))
+		}
 	})
 	t.Run("slice of primitives", func(t *testing.T) {
 		t.Run("int to string", func(t *testing.T) {
@@ -28,7 +30,9 @@ func TestMap(t *testing.T) {
 				return fmt.Sprintf("%d", val)
 			})
 
-			AssertEqual(t, want, have)
+			if !cmp.Equal(want, have) {
+				t.Error(cmp.Diff(want, have))
+			}
 		})
 		t.Run("float to string", func(t *testing.T) {
 			vals := []float64{3.14, 12.0}
@@ -38,7 +42,9 @@ func TestMap(t *testing.T) {
 				return fmt.Sprintf("%.4f", val)
 			})
 
-			AssertEqual(t, want, have)
+			if !cmp.Equal(want, have) {
+				t.Error(cmp.Diff(want, have))
+			}
 		})
 		t.Run("int to rune", func(t *testing.T) {
 			vals := []int{97, 98, 99, 100}
@@ -46,7 +52,9 @@ func TestMap(t *testing.T) {
 			want := []rune{'a', 'b', 'c', 'd'}
 			have := slices.Map(vals, func(val int) rune { return rune(val) })
 
-			AssertEqual(t, want, have)
+			if !cmp.Equal(want, have) {
+				t.Error(cmp.Diff(want, have))
+			}
 		})
 		t.Run("rune to int", func(t *testing.T) {
 			vals := []rune{'a', 'b', 'c', 'd'}
@@ -54,7 +62,9 @@ func TestMap(t *testing.T) {
 			want := []int{97, 98, 99, 100}
 			have := slices.Map(vals, func(val rune) int { return int(val) })
 
-			AssertEqual(t, want, have)
+			if !cmp.Equal(want, have) {
+				t.Error(cmp.Diff(want, have))
+			}
 		})
 		t.Run("string to int", func(t *testing.T) {
 			vals := []string{"3", "12", "err"}
@@ -68,7 +78,9 @@ func TestMap(t *testing.T) {
 				return out
 			})
 
-			AssertEqual(t, want, have)
+			if !cmp.Equal(want, have) {
+				t.Error(cmp.Diff(want, have))
+			}
 		})
 		t.Run("string to float", func(t *testing.T) {
 			vals := []string{"3.14", "12.0", "err"}
@@ -82,7 +94,9 @@ func TestMap(t *testing.T) {
 				return out
 			})
 
-			AssertEqual(t, want, have)
+			if !cmp.Equal(want, have) {
+				t.Error(cmp.Diff(want, have))
+			}
 		})
 	})
 	t.Run("slice of structures", func(t *testing.T) {
@@ -94,7 +108,9 @@ func TestMap(t *testing.T) {
 		want := []string{"localhost", "google.com"}
 		have := slices.Map(vals, func(val url.URL) string { return val.Host })
 
-		AssertEqual(t, want, have)
+		if !cmp.Equal(want, have) {
+			t.Error(cmp.Diff(want, have))
+		}
 	})
 	t.Run("slice of interfaces", func(t *testing.T) {
 		vals := []fmt.Stringer{
@@ -105,6 +121,8 @@ func TestMap(t *testing.T) {
 		want := []string{"http://localhost", "https://google.com"}
 		have := slices.Map(vals, func(val fmt.Stringer) string { return val.String() })
 
-		AssertEqual(t, want, have)
+		if !cmp.Equal(want, have) {
+			t.Error(cmp.Diff(want, have))
+		}
 	})
 }

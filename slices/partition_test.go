@@ -5,10 +5,9 @@ import (
 	"net/url"
 	"strings"
 	"testing"
-	"time"
 
-	. "github.com/dosadczuk/knapzak/internal/testing"
 	"github.com/dosadczuk/knapzak/slices"
+	"github.com/google/go-cmp/cmp"
 )
 
 func TestPartition(t *testing.T) {
@@ -18,8 +17,12 @@ func TestPartition(t *testing.T) {
 		var wantT, wantF []int
 		haveT, haveF := slices.Partition(vals, func(val int) bool { return false })
 
-		AssertEqual(t, wantT, haveT)
-		AssertEqual(t, wantF, haveF)
+		if !cmp.Equal(wantT, haveT) {
+			t.Error(cmp.Diff(wantT, haveT))
+		}
+		if !cmp.Equal(wantF, haveF) {
+			t.Error(cmp.Diff(wantF, haveF))
+		}
 	})
 	t.Run("slice of primitives", func(t *testing.T) {
 		vals := []int{1, 2, 3, 4, 5}
@@ -27,25 +30,32 @@ func TestPartition(t *testing.T) {
 		wantT, wantF := []int{4, 5}, []int{1, 2, 3}
 		haveT, haveF := slices.Partition(vals, func(val int) bool { return val > 3 })
 
-		AssertEqual(t, wantT, haveT)
-		AssertEqual(t, wantF, haveF)
+		if !cmp.Equal(wantT, haveT) {
+			t.Error(cmp.Diff(wantT, haveT))
+		}
+		if !cmp.Equal(wantF, haveF) {
+			t.Error(cmp.Diff(wantF, haveF))
+		}
 	})
 	t.Run("slice of structures", func(t *testing.T) {
-		vals := []time.Time{
-			time.Now().Add(1 * time.Hour),
-			time.Now().Add(2 * time.Hour),
-			time.Now().Add(3 * time.Hour),
-			time.Now().Add(4 * time.Hour),
-			time.Now().Add(5 * time.Hour),
+		vals := []url.URL{
+			{Scheme: "http", Host: "0.0.0.0"},
+			{Scheme: "https", Host: "0.0.0.0"},
+			{Scheme: "http", Host: "127.0.0.1"},
+			{Scheme: "https", Host: "127.0.0.1"},
 		}
 
-		wantT, wantF := []time.Time{vals[0], vals[1]}, []time.Time{vals[2], vals[3], vals[4]}
-		haveT, haveF := slices.Partition(vals, func(val time.Time) bool {
-			return val.Before(time.Now().Add(3 * time.Hour))
+		wantT, wantF := []url.URL{vals[0], vals[2]}, []url.URL{vals[1], vals[3]}
+		haveT, haveF := slices.Partition(vals, func(addr url.URL) bool {
+			return addr.Scheme == "http"
 		})
 
-		AssertEqual(t, wantT, haveT)
-		AssertEqual(t, wantF, haveF)
+		if !cmp.Equal(wantT, haveT) {
+			t.Error(cmp.Diff(wantT, haveT))
+		}
+		if !cmp.Equal(wantF, haveF) {
+			t.Error(cmp.Diff(wantF, haveF))
+		}
 	})
 	t.Run("slice of interfaces", func(t *testing.T) {
 		vals := []fmt.Stringer{
@@ -58,7 +68,11 @@ func TestPartition(t *testing.T) {
 			return strings.HasPrefix(val.String(), "https")
 		})
 
-		AssertEqual(t, wantT, haveT)
-		AssertEqual(t, wantF, haveF)
+		if !cmp.Equal(wantT, haveT) {
+			t.Error(cmp.Diff(wantT, haveT))
+		}
+		if !cmp.Equal(wantF, haveF) {
+			t.Error(cmp.Diff(wantF, haveF))
+		}
 	})
 }

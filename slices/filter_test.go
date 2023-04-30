@@ -7,8 +7,8 @@ import (
 	"testing"
 	"time"
 
-	. "github.com/dosadczuk/knapzak/internal/testing"
 	"github.com/dosadczuk/knapzak/slices"
+	"github.com/google/go-cmp/cmp"
 )
 
 func TestFilter(t *testing.T) {
@@ -18,7 +18,9 @@ func TestFilter(t *testing.T) {
 		var want []int
 		have := slices.Filter(vals, func(val int) bool { return false })
 
-		AssertEqual(t, want, have)
+		if !cmp.Equal(want, have) {
+			t.Error(cmp.Diff(want, have))
+		}
 	})
 	t.Run("slice of primitives", func(t *testing.T) {
 		vals := []int{1, 2, 3, 4, 5}
@@ -26,7 +28,9 @@ func TestFilter(t *testing.T) {
 		want := []int{4, 5}
 		have := slices.Filter(vals, func(val int) bool { return val > 3 })
 
-		AssertEqual(t, want, have)
+		if !cmp.Equal(want, have) {
+			t.Error(cmp.Diff(want, have))
+		}
 	})
 	t.Run("slice of structures", func(t *testing.T) {
 		vals := []time.Time{
@@ -42,7 +46,9 @@ func TestFilter(t *testing.T) {
 			return val.Before(time.Now())
 		})
 
-		AssertEqual(t, want, have)
+		if !cmp.Equal(want, have) {
+			t.Error(cmp.Diff(want, have))
+		}
 	})
 	t.Run("slice of interfaces", func(t *testing.T) {
 		vals := []fmt.Stringer{
@@ -55,6 +61,8 @@ func TestFilter(t *testing.T) {
 			return strings.HasPrefix(val.String(), "https")
 		})
 
-		AssertEqual(t, want, have)
+		if !cmp.Equal(want, have) {
+			t.Error(cmp.Diff(want, have))
+		}
 	})
 }

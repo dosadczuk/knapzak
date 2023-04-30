@@ -4,8 +4,8 @@ import (
 	"net/url"
 	"testing"
 
-	. "github.com/dosadczuk/knapzak/internal/testing"
 	"github.com/dosadczuk/knapzak/slices"
+	"github.com/google/go-cmp/cmp"
 )
 
 func TestReduceRight(t *testing.T) {
@@ -15,7 +15,9 @@ func TestReduceRight(t *testing.T) {
 		want := 0
 		have := slices.ReduceRight(vals, func(acc int, val int) int { return acc + val })
 
-		AssertEqual(t, want, have)
+		if !cmp.Equal(want, have) {
+			t.Error(cmp.Diff(want, have))
+		}
 	})
 	t.Run("slice of primitives", func(t *testing.T) {
 		vals := []int{1, 2, 3, 4, 5}
@@ -23,7 +25,9 @@ func TestReduceRight(t *testing.T) {
 		want := 15
 		have := slices.ReduceRight(vals, func(acc int, val int) int { return acc + val })
 
-		AssertEqual(t, want, have)
+		if !cmp.Equal(want, have) {
+			t.Error(cmp.Diff(want, have))
+		}
 	})
 	t.Run("slice of structures", func(t *testing.T) {
 		vals := []url.URL{
@@ -40,6 +44,8 @@ func TestReduceRight(t *testing.T) {
 			},
 		)
 
-		AssertEqual(t, want, have)
+		if !cmp.Equal(want, have) {
+			t.Error(cmp.Diff(want, have))
+		}
 	})
 }

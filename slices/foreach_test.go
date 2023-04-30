@@ -6,8 +6,8 @@ import (
 	"testing"
 	"time"
 
-	. "github.com/dosadczuk/knapzak/internal/testing"
 	"github.com/dosadczuk/knapzak/slices"
+	"github.com/google/go-cmp/cmp"
 )
 
 func TestForEach(t *testing.T) {
@@ -18,7 +18,9 @@ func TestForEach(t *testing.T) {
 			have = append(have, val)
 		})
 
-		AssertEqual(t, want, have)
+		if !cmp.Equal(want, have) {
+			t.Error(cmp.Diff(want, have))
+		}
 	})
 	t.Run("slice of primitives", func(t *testing.T) {
 		want := []int{1, 2, 3, 4, 5}
@@ -27,7 +29,9 @@ func TestForEach(t *testing.T) {
 			have = append(have, val)
 		})
 
-		AssertEqual(t, want, have)
+		if !cmp.Equal(want, have) {
+			t.Error(cmp.Diff(want, have))
+		}
 	})
 	t.Run("slice of structures", func(t *testing.T) {
 		want := []time.Time{
@@ -42,7 +46,9 @@ func TestForEach(t *testing.T) {
 			have = append(have, val)
 		})
 
-		AssertEqual(t, want, have)
+		if !cmp.Equal(want, have) {
+			t.Error(cmp.Diff(want, have))
+		}
 	})
 	t.Run("slice of interfaces", func(t *testing.T) {
 		want := []fmt.Stringer{
@@ -54,6 +60,8 @@ func TestForEach(t *testing.T) {
 			have = append(have, val)
 		})
 
-		AssertEqual(t, want, have)
+		if !cmp.Equal(want, have) {
+			t.Error(cmp.Diff(want, have))
+		}
 	})
 }

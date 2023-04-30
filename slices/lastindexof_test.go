@@ -6,8 +6,8 @@ import (
 	"testing"
 	"time"
 
-	. "github.com/dosadczuk/knapzak/internal/testing"
 	"github.com/dosadczuk/knapzak/slices"
+	"github.com/google/go-cmp/cmp"
 )
 
 func TestLastIndexOf(t *testing.T) {
@@ -17,7 +17,9 @@ func TestLastIndexOf(t *testing.T) {
 		want := -1
 		have := slices.LastIndexOf(vals, 0)
 
-		AssertEqual(t, want, have)
+		if !cmp.Equal(want, have) {
+			t.Error(cmp.Diff(want, have))
+		}
 	})
 	t.Run("slice of primitives", func(t *testing.T) {
 		vals := []int{1, 4, 3, 4, 5}
@@ -25,7 +27,9 @@ func TestLastIndexOf(t *testing.T) {
 		want := 3
 		have := slices.LastIndexOf(vals, 4)
 
-		AssertEqual(t, want, have)
+		if !cmp.Equal(want, have) {
+			t.Error(cmp.Diff(want, have))
+		}
 	})
 	t.Run("slice of structures", func(t *testing.T) {
 		vals := []time.Time{
@@ -39,7 +43,9 @@ func TestLastIndexOf(t *testing.T) {
 		want := -1
 		have := slices.LastIndexOf(vals, time.Now())
 
-		AssertEqual(t, want, have)
+		if !cmp.Equal(want, have) {
+			t.Error(cmp.Diff(want, have))
+		}
 	})
 	t.Run("slice of interfaces", func(t *testing.T) {
 		vals := []fmt.Stringer{
@@ -53,6 +59,8 @@ func TestLastIndexOf(t *testing.T) {
 		want := 3
 		have := slices.LastIndexOf(vals, vals[3])
 
-		AssertEqual(t, want, have)
+		if !cmp.Equal(want, have) {
+			t.Error(cmp.Diff(want, have))
+		}
 	})
 }

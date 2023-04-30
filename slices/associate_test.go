@@ -4,10 +4,9 @@ import (
 	"fmt"
 	"net/netip"
 	"testing"
-	"time"
 
-	. "github.com/dosadczuk/knapzak/internal/testing"
 	"github.com/dosadczuk/knapzak/slices"
+	"github.com/google/go-cmp/cmp"
 )
 
 func TestAssociate(t *testing.T) {
@@ -17,7 +16,9 @@ func TestAssociate(t *testing.T) {
 		var want map[int]int
 		have := slices.Associate(vals, func(val int) (int, int) { return val, 0 })
 
-		AssertEqual(t, want, have)
+		if !cmp.Equal(want, have) {
+			t.Error(cmp.Diff(want, have))
+		}
 	})
 	t.Run("slice of primitives", func(t *testing.T) {
 		vals := []int{1, 2, 3, 4, 5}
@@ -31,29 +32,27 @@ func TestAssociate(t *testing.T) {
 		}
 		have := slices.Associate(vals, func(val int) (int, bool) { return val, val%2 == 0 })
 
-		AssertEqual(t, want, have)
+		if !cmp.Equal(want, have) {
+			t.Error(cmp.Diff(want, have))
+		}
 	})
 	t.Run("slice of structures", func(t *testing.T) {
-		vals := []time.Time{
-			time.Now().Add(1 * time.Hour),
-			time.Now().Add(2 * time.Hour),
-			time.Now().Add(3 * time.Hour),
-			time.Now().Add(4 * time.Hour),
-			time.Now().Add(5 * time.Hour),
+		vals := []netip.Addr{
+			netip.AddrFrom4([4]byte{1, 0, 0, 0}),
+			netip.AddrFrom4([4]byte{2, 0, 0, 0}),
 		}
 
-		want := map[float64]time.Time{
-			1: vals[0],
-			2: vals[1],
-			3: vals[2],
-			4: vals[3],
-			5: vals[4],
+		want := map[string]bool{
+			"1.0.0.0": true,
+			"2.0.0.0": true,
 		}
-		have := slices.Associate(vals, func(val time.Time) (float64, time.Time) {
-			return val.Sub(time.Now()).Hours(), val
+		have := slices.Associate(vals, func(val netip.Addr) (string, bool) {
+			return val.String(), val.Is4()
 		})
 
-		AssertEqual(t, want, have)
+		if !cmp.Equal(want, have) {
+			t.Error(cmp.Diff(want, have))
+		}
 	})
 	t.Run("slice of interfaces", func(t *testing.T) {
 		vals := []fmt.Stringer{
@@ -79,6 +78,8 @@ func TestAssociate(t *testing.T) {
 			return key, val.String()
 		})
 
-		AssertEqual(t, want, have)
+		if !cmp.Equal(want, have) {
+			t.Error(cmp.Diff(want, have))
+		}
 	})
 }

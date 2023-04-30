@@ -6,8 +6,8 @@ import (
 	"testing"
 	"time"
 
-	. "github.com/dosadczuk/knapzak/internal/testing"
 	"github.com/dosadczuk/knapzak/slices"
+	"github.com/google/go-cmp/cmp"
 )
 
 func TestFirst(t *testing.T) {
@@ -17,8 +17,12 @@ func TestFirst(t *testing.T) {
 		wantValue, wantFound := 0, false
 		haveValue, haveFound := slices.First(vals)
 
-		AssertEqual(t, wantValue, haveValue)
-		AssertEqual(t, wantFound, haveFound)
+		if !cmp.Equal(wantValue, haveValue) {
+			t.Error(cmp.Diff(wantValue, haveValue))
+		}
+		if !cmp.Equal(wantFound, haveFound) {
+			t.Error(cmp.Diff(wantFound, haveFound))
+		}
 	})
 	t.Run("slice of primitives", func(t *testing.T) {
 		vals := []int{1, 2, 3, 4, 5}
@@ -26,8 +30,12 @@ func TestFirst(t *testing.T) {
 		wantValue, wantFound := 1, true
 		haveValue, haveFound := slices.First(vals)
 
-		AssertEqual(t, wantValue, haveValue)
-		AssertEqual(t, wantFound, haveFound)
+		if !cmp.Equal(wantValue, haveValue) {
+			t.Error(cmp.Diff(wantValue, haveValue))
+		}
+		if !cmp.Equal(wantFound, haveFound) {
+			t.Error(cmp.Diff(wantFound, haveFound))
+		}
 	})
 	t.Run("slice of structures", func(t *testing.T) {
 		vals := []time.Time{
@@ -41,8 +49,12 @@ func TestFirst(t *testing.T) {
 		wantValue, wantFound := vals[0], true
 		haveValue, haveFound := slices.First(vals)
 
-		AssertEqual(t, wantValue, haveValue)
-		AssertEqual(t, wantFound, haveFound)
+		if !cmp.Equal(wantValue, haveValue) {
+			t.Error(cmp.Diff(wantValue, haveValue))
+		}
+		if !cmp.Equal(wantFound, haveFound) {
+			t.Error(cmp.Diff(wantFound, haveFound))
+		}
 	})
 	t.Run("slice of interfaces", func(t *testing.T) {
 		vals := []fmt.Stringer{
@@ -53,7 +65,11 @@ func TestFirst(t *testing.T) {
 		wantValue, wantFound := vals[0], true
 		haveValue, haveFound := slices.First(vals)
 
-		AssertEqual(t, wantValue, haveValue)
-		AssertEqual(t, wantFound, haveFound)
+		if !cmp.Equal(wantValue, haveValue) {
+			t.Error(cmp.Diff(wantValue, haveValue))
+		}
+		if !cmp.Equal(wantFound, haveFound) {
+			t.Error(cmp.Diff(wantFound, haveFound))
+		}
 	})
 }
