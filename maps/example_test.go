@@ -66,6 +66,20 @@ func ExampleContainsValue() {
 	// contains: true
 }
 
+func ExampleKeys() {
+	values := map[int]int{
+		1: 2,
+		2: 4,
+		3: 6,
+	}
+	result := maps.Keys(values)
+
+	fmt.Printf("keys: %v", result)
+
+	// Output:
+	// keys: [1 2 3]
+}
+
 func ExampleNone() {
 	values := map[int]int{
 		1: 2,
