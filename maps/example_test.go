@@ -69,6 +69,23 @@ func ExampleContainsValue() {
 	// true
 }
 
+func ExampleEntries() {
+	values := map[int]int{
+		1: 2,
+		2: 4,
+		3: 6,
+	}
+
+	result := maps.Entries(values)
+	sort.Slice(result, func(i, j int) bool { // only for `Output` purpose
+		return result[i].Key < result[j].Key
+	})
+	fmt.Println(result)
+
+	// Output:
+	// [{1 2} {2 4} {3 6}]
+}
+
 func ExampleEqual() {
 	m1 := map[int]int{
 		1: 2,
