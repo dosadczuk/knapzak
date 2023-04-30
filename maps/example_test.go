@@ -86,6 +86,20 @@ func ExampleForEach() {
 	// [1:2 2:4 3:6]
 }
 
+func ExampleKeyOf() {
+	values := map[int]int{
+		1: 2,
+		2: 4,
+		3: 6,
+	}
+
+	result := maps.KeyOf(values, 6)
+	fmt.Println(result)
+
+	// Output:
+	// 3
+}
+
 func ExampleKeys() {
 	values := map[int]int{
 		1: 2,
