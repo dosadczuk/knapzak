@@ -30,7 +30,7 @@ func Max[M ~map[K]V, K comparable, V constraints.Ordered](vals M) (max V) {
 //	 0 - if the arguments are equal,
 //	-1 - if the first argument is less than the second,
 //	+1 - if the second argument is less than the first.
-func MaxFunc[M ~map[K]V, K comparable, V any](vals M, comparator func(V, V) int) (max V) {
+func MaxFunc[M ~map[K]V, K comparable, V any](vals M, cmp func(V, V) int) (max V) {
 	if len(vals) == 0 {
 		return
 	}
@@ -41,7 +41,7 @@ func MaxFunc[M ~map[K]V, K comparable, V any](vals M, comparator func(V, V) int)
 		break
 	}
 	for _, val := range vals {
-		if comparator(val, max) > 0 {
+		if cmp(val, max) > 0 {
 			max = val
 		}
 	}
