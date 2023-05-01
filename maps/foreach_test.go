@@ -9,45 +9,37 @@ import (
 )
 
 func TestForEach(t *testing.T) {
-	t.Run("empty map", func(t *testing.T) {
-		var vals map[int]int
+	tt := map[string]struct {
+		// input
+		values map[int]int
+		// assert
+		want []int
+	}{
+		"empty map": {
+			values: nil, // zero value
+			want:   nil, // zero value
+		},
+		"map with key-value pair": {
+			values: map[int]int{1: 2},
+			want:   []int{1, 2},
+		},
+		"map with key-value pairs": {
+			values: map[int]int{1: 2, 2: 1},
+			want:   []int{1, 1, 2, 2},
+		},
+	}
 
-		var want []int
-		var have []int
-		maps.ForEach(vals, func(_ int, val int) {
-			have = append(have, val)
+	for name, tc := range tt {
+		t.Run(name, func(t *testing.T) {
+			var have []int
+			maps.ForEach(tc.values, func(key, val int) {
+				have = append(have, key, val)
+			})
+			sort.Ints(have)
+
+			if !cmp.Equal(tc.want, have) {
+				t.Error(cmp.Diff(tc.want, have))
+			}
 		})
-
-		if !cmp.Equal(want, have) {
-			t.Error(cmp.Diff(want, have))
-		}
-	})
-	t.Run("map with key-value pair", func(t *testing.T) {
-		vals := map[int]int{1: 2}
-
-		want := []int{1, 2}
-		var have []int
-		maps.ForEach(vals, func(key int, val int) {
-			have = append(have, key, val)
-		})
-		sort.Ints(have)
-
-		if !cmp.Equal(want, have) {
-			t.Error(cmp.Diff(want, have))
-		}
-	})
-	t.Run("map with key-value pairs", func(t *testing.T) {
-		vals := map[int]int{1: 2, 2: 1}
-
-		want := []int{1, 1, 2, 2}
-		var have []int
-		maps.ForEach(vals, func(key int, val int) {
-			have = append(have, key, val)
-		})
-		sort.Ints(have)
-
-		if !cmp.Equal(want, have) {
-			t.Error(cmp.Diff(want, have))
-		}
-	})
+	}
 }

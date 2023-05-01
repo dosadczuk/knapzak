@@ -8,34 +8,37 @@ import (
 )
 
 func TestContainsValue(t *testing.T) {
-	t.Run("empty map", func(t *testing.T) {
-		var vals map[int]int
+	tt := map[string]struct {
+		// input
+		values map[int]int
+		target int
+		// assert
+		want bool
+	}{
+		"empty map": {
+			values: nil, // zero value
+			target: 1,
+			want:   false,
+		},
+		"map with matching value": {
+			values: map[int]int{1: 2},
+			target: 2,
+			want:   true,
+		},
+		"map with not matching value": {
+			values: map[int]int{1: 2},
+			target: 1,
+			want:   false,
+		},
+	}
 
-		want := false
-		have := maps.ContainsValue(vals, 1)
+	for name, tc := range tt {
+		t.Run(name, func(t *testing.T) {
+			have := maps.ContainsValue(tc.values, tc.target)
 
-		if !cmp.Equal(want, have) {
-			t.Error(cmp.Diff(want, have))
-		}
-	})
-	t.Run("map with matching value", func(t *testing.T) {
-		vals := map[int]int{1: 2}
-
-		want := true
-		have := maps.ContainsValue(vals, 2)
-
-		if !cmp.Equal(want, have) {
-			t.Error(cmp.Diff(want, have))
-		}
-	})
-	t.Run("map with not matching value", func(t *testing.T) {
-		vals := map[int]int{1: 2}
-
-		want := false
-		have := maps.ContainsValue(vals, 1)
-
-		if !cmp.Equal(want, have) {
-			t.Error(cmp.Diff(want, have))
-		}
-	})
+			if !cmp.Equal(tc.want, have) {
+				t.Error(cmp.Diff(tc.want, have))
+			}
+		})
+	}
 }

@@ -8,42 +8,45 @@ import (
 )
 
 func TestAll(t *testing.T) {
-	t.Run("empty map", func(t *testing.T) {
-		var vals map[int]int
+	tt := map[string]struct {
+		// input
+		values    map[int]int
+		predicate func(int, int) bool
+		// assert
+		want bool
+	}{
+		"empty map": {
+			values:    nil, // zero value
+			predicate: func(_ int, _ int) bool { return true },
+			want:      true,
+		},
+		"map with values matching predicate": {
+			values: map[int]int{
+				1: 2,
+				2: 4,
+				3: 6,
+			},
+			predicate: func(_ int, val int) bool { return val%2 == 0 },
+			want:      true,
+		},
+		"map with values not matching predicate": {
+			values: map[int]int{
+				1: 2,
+				2: 4,
+				3: 6,
+			},
+			predicate: func(_ int, val int) bool { return val%2 == 1 },
+			want:      false,
+		},
+	}
 
-		want := true
-		have := maps.All(vals, func(_ int, _ int) bool { return false })
+	for name, tc := range tt {
+		t.Run(name, func(t *testing.T) {
+			have := maps.All(tc.values, tc.predicate)
 
-		if !cmp.Equal(want, have) {
-			t.Error(cmp.Diff(want, have))
-		}
-	})
-	t.Run("map with values matching predicate", func(t *testing.T) {
-		vals := map[int]int{
-			1: 2,
-			2: 4,
-			3: 6,
-		}
-
-		want := true
-		have := maps.All(vals, func(_ int, v int) bool { return v%2 == 0 })
-
-		if !cmp.Equal(want, have) {
-			t.Error(cmp.Diff(want, have))
-		}
-	})
-	t.Run("map with values not matching predicate", func(t *testing.T) {
-		vals := map[int]int{
-			1: 2,
-			2: 4,
-			3: 6,
-		}
-
-		want := false
-		have := maps.All(vals, func(_ int, v int) bool { return v%2 == 1 })
-
-		if !cmp.Equal(want, have) {
-			t.Error(cmp.Diff(want, have))
-		}
-	})
+			if !cmp.Equal(tc.want, have) {
+				t.Error(cmp.Diff(tc.want, have))
+			}
+		})
+	}
 }

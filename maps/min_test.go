@@ -1,9 +1,6 @@
 package maps_test
 
 import (
-	"fmt"
-	"net/url"
-	"strings"
 	"testing"
 
 	"github.com/dosadczuk/knapzak/maps"
@@ -11,80 +8,73 @@ import (
 )
 
 func TestMin(t *testing.T) {
-	t.Run("empty map", func(t *testing.T) {
-		var vals map[int]int
+	tt := map[string]struct {
+		// input
+		values map[int]int
+		// assert
+		want int
+	}{
+		"empty map": {
+			values: nil, // zero value
+			want:   0,   // zero value
+		},
+		"map with key-value pair": {
+			values: map[int]int{1: 2},
+			want:   2,
+		},
+		"map with key-value pairs": {
+			values: map[int]int{
+				3: 3,
+				1: 1,
+				2: 4,
+			},
+			want: 1,
+		},
+	}
 
-		var want int // zero value
-		have := maps.Min(vals)
+	for name, tc := range tt {
+		t.Run(name, func(t *testing.T) {
+			have := maps.Min(tc.values)
 
-		if !cmp.Equal(want, have) {
-			t.Error(cmp.Diff(want, have))
-		}
-	})
-	t.Run("map with key-value pair", func(t *testing.T) {
-		vals := map[int]int{1: 2}
-
-		want := 2
-		have := maps.Min(vals)
-
-		if !cmp.Equal(want, have) {
-			t.Error(cmp.Diff(want, have))
-		}
-	})
-	t.Run("map with key-value pairs", func(t *testing.T) {
-		vals := map[int]int{
-			1: 1,
-			3: 3,
-			2: 4,
-		}
-
-		want := 1
-		have := maps.Min(vals)
-
-		if !cmp.Equal(want, have) {
-			t.Error(cmp.Diff(want, have))
-		}
-	})
+			if !cmp.Equal(tc.want, have) {
+				t.Error(cmp.Diff(tc.want, have))
+			}
+		})
+	}
 }
 
 func TestMinFunc(t *testing.T) {
-	t.Run("empty map", func(t *testing.T) {
-		var vals map[int]int
+	tt := map[string]struct {
+		// input
+		values map[int]int
+		// assert
+		want int
+	}{
+		"empty map": {
+			values: nil, // zero value
+			want:   0,   // zero value
+		},
+		"map with key-value pair": {
+			values: map[int]int{1: 2},
+			want:   2,
+		},
+		"map with key-value pairs": {
+			values: map[int]int{
+				3: 3,
+				1: 1,
+				2: 4,
+			},
+			want: 1,
+		},
+	}
 
-		var want int // zero value
-		have := maps.MinFunc(vals, func(v1, v2 int) int { return v1 - v2 })
+	for name, tc := range tt {
+		t.Run(name, func(t *testing.T) {
+			have := maps.MinFunc(tc.values, func(v1, v2 int) int { return v1 - v2 })
 
-		if !cmp.Equal(want, have) {
-			t.Error(cmp.Diff(want, have))
-		}
-	})
-	t.Run("map with key-value pair", func(t *testing.T) {
-		vals := map[int]fmt.Stringer{
-			127: &url.URL{Host: "127.0.0.1"},
-		}
-
-		want := vals[127]
-		have := maps.MinFunc(vals, func(v1, v2 fmt.Stringer) int {
-			return strings.Compare(v1.String(), v2.String())
+			if !cmp.Equal(tc.want, have) {
+				t.Error(cmp.Diff(tc.want, have))
+			}
 		})
-
-		if !cmp.Equal(want, have) {
-			t.Error(cmp.Diff(want, have))
-		}
-	})
-	t.Run("map with key-value pairs", func(t *testing.T) {
-		vals := map[int]fmt.Stringer{
-			255: &url.URL{Host: "255.0.0.0"},
-			127: &url.URL{Host: "127.0.0.1"},
-		}
-
-		want := vals[127]
-		have := maps.MinFunc(vals, func(v1, v2 fmt.Stringer) int {
-			return strings.Compare(v1.String(), v2.String())
-		})
-
-		if !cmp.Equal(want, have) {
-			t.Error(cmp.Diff(want, have))
-		}
-	})
+	}
 }

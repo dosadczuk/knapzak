@@ -9,39 +9,44 @@ import (
 )
 
 func TestEntries(t *testing.T) {
-	t.Run("empty map", func(t *testing.T) {
-		var vals map[int]int
+	tt := map[string]struct {
+		// input
+		values map[int]int
+		// assert
+		want []maps.Entry[int, int]
+	}{
+		"empty map": {
+			values: nil, // zero value
+			want:   nil, // zero value
+		},
+		"map with key-value pair": {
+			values: map[int]int{1: 2},
+			want:   []maps.Entry[int, int]{{1, 2}},
+		},
+		"map with key-value pairs": {
+			values: map[int]int{
+				1: 2,
+				2: 3,
+				3: 4,
+			},
+			want: []maps.Entry[int, int]{
+				{1, 2},
+				{2, 3},
+				{3, 4},
+			},
+		},
+	}
 
-		var want []maps.Entry[int, int]
-		have := maps.Entries(vals)
+	for name, tc := range tt {
+		t.Run(name, func(t *testing.T) {
+			have := maps.Entries(tc.values)
+			sort.Slice(have, func(i, j int) bool {
+				return have[i].Key < have[j].Key
+			})
 
-		if !cmp.Equal(want, have) {
-			t.Error(cmp.Diff(want, have))
-		}
-	})
-	t.Run("map with key-value pair", func(t *testing.T) {
-		vals := map[int]int{1: 2}
-
-		want := []maps.Entry[int, int]{{1, 2}}
-		have := maps.Entries(vals)
-
-		if !cmp.Equal(want, have) {
-			t.Error(cmp.Diff(want, have))
-		}
-	})
-	t.Run("map with key-value pairs", func(t *testing.T) {
-		vals := map[int]int{
-			1: 2,
-			2: 3,
-			3: 4,
-		}
-
-		want := []maps.Entry[int, int]{{1, 2}, {2, 3}, {3, 4}}
-		have := maps.Entries(vals)
-		sort.Slice(have, func(i, j int) bool { return have[i].Key < have[j].Key })
-
-		if !cmp.Equal(want, have) {
-			t.Error(cmp.Diff(want, have))
-		}
-	})
+			if !cmp.Equal(tc.want, have) {
+				t.Error(cmp.Diff(tc.want, have))
+			}
+		})
+	}
 }
