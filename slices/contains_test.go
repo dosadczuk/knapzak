@@ -8,34 +8,37 @@ import (
 )
 
 func TestContains(t *testing.T) {
-	t.Run("empty slice", func(t *testing.T) {
-		var vals []int
+	tt := map[string]struct {
+		// input
+		values []int
+		target int
+		// assert
+		want bool
+	}{
+		"empty slice": {
+			values: nil, // zero value
+			target: 0,
+			want:   false,
+		},
+		"slice with matching value": {
+			values: []int{1, 2, 3, 4, 5},
+			target: 4,
+			want:   true,
+		},
+		"slice with not matching value": {
+			values: []int{1, 2, 3, 4, 5},
+			target: 0,
+			want:   false,
+		},
+	}
 
-		want := false
-		have := slices.Contains(vals, 0)
+	for name, tc := range tt {
+		t.Run(name, func(t *testing.T) {
+			have := slices.Contains(tc.values, tc.target)
 
-		if !cmp.Equal(want, have) {
-			t.Error(cmp.Diff(want, have))
-		}
-	})
-	t.Run("slice with matching value", func(t *testing.T) {
-		vals := []int{1, 2, 3, 4, 5}
-
-		want := true
-		have := slices.Contains(vals, 4)
-
-		if !cmp.Equal(want, have) {
-			t.Error(cmp.Diff(want, have))
-		}
-	})
-	t.Run("slice with not matching value", func(t *testing.T) {
-		vals := []int{1, 2, 3, 4, 5}
-
-		want := false
-		have := slices.Contains(vals, 0)
-
-		if !cmp.Equal(want, have) {
-			t.Error(cmp.Diff(want, have))
-		}
-	})
+			if !cmp.Equal(tc.want, have) {
+				t.Error(cmp.Diff(tc.want, have))
+			}
+		})
+	}
 }

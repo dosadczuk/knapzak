@@ -1,7 +1,6 @@
 package slices_test
 
 import (
-	"net/url"
 	"testing"
 
 	"github.com/dosadczuk/knapzak/slices"
@@ -9,43 +8,37 @@ import (
 )
 
 func TestReduce(t *testing.T) {
-	t.Run("empty slice", func(t *testing.T) {
-		var vals []int
+	tt := map[string]struct {
+		// input
+		values    []string
+		operation func(string, string) string
+		// assert
+		want string
+	}{
+		"empty slice": {
+			values:    nil, // zero value
+			operation: func(_ string, _ string) string { return "" },
+			want:      "",
+		},
+		"slice with value": {
+			values:    []string{"1"},
+			operation: func(acc string, val string) string { return acc + val },
+			want:      "1",
+		},
+		"slice with values": {
+			values:    []string{"1", "2", "3", "4", "5"},
+			operation: func(acc string, val string) string { return acc + val },
+			want:      "12345",
+		},
+	}
 
-		want := 0
-		have := slices.Reduce(vals, func(acc int, val int) int { return acc + val })
+	for name, tc := range tt {
+		t.Run(name, func(t *testing.T) {
+			have := slices.Reduce(tc.values, tc.operation)
 
-		if !cmp.Equal(want, have) {
-			t.Error(cmp.Diff(want, have))
-		}
-	})
-	t.Run("slice of primitives", func(t *testing.T) {
-		vals := []int{1, 2, 3, 4, 5}
-
-		want := 15
-		have := slices.Reduce(vals, func(acc int, val int) int { return acc + val })
-
-		if !cmp.Equal(want, have) {
-			t.Error(cmp.Diff(want, have))
-		}
-	})
-	t.Run("slice of structures", func(t *testing.T) {
-		vals := []url.URL{
-			{Scheme: "http", Host: "localhost"},
-			{Scheme: "https", Host: "google.com"},
-		}
-
-		want := url.URL{Scheme: "http", Host: "google.com"}
-		have := slices.Reduce(
-			vals,
-			func(acc url.URL, val url.URL) url.URL {
-				acc.Host = val.Host
-				return acc
-			},
-		)
-
-		if !cmp.Equal(want, have) {
-			t.Error(cmp.Diff(want, have))
-		}
-	})
+			if !cmp.Equal(tc.want, have) {
+				t.Error(cmp.Diff(tc.want, have))
+			}
+		})
+	}
 }

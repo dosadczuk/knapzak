@@ -1,75 +1,47 @@
 package slices_test
 
 import (
-	"fmt"
-	"net/url"
 	"testing"
-	"time"
 
 	"github.com/dosadczuk/knapzak/slices"
 	"github.com/google/go-cmp/cmp"
 )
 
 func TestFirst(t *testing.T) {
-	t.Run("empty slice", func(t *testing.T) {
-		var vals []int
+	tt := map[string]struct {
+		// input
+		values []int
+		// assert
+		wantValue int
+		wantFound bool
+	}{
+		"empty slice": {
+			values:    nil,   // zero value
+			wantValue: 0,     // zero value
+			wantFound: false, // zero value
+		},
+		"slice with value": {
+			values:    []int{1},
+			wantValue: 1,
+			wantFound: true,
+		},
+		"slice with values": {
+			values:    []int{1, 2, 3, 4, 5},
+			wantValue: 1,
+			wantFound: true,
+		},
+	}
 
-		wantValue, wantFound := 0, false
-		haveValue, haveFound := slices.First(vals)
+	for name, tc := range tt {
+		t.Run(name, func(t *testing.T) {
+			haveValue, haveFound := slices.First(tc.values)
 
-		if !cmp.Equal(wantValue, haveValue) {
-			t.Error(cmp.Diff(wantValue, haveValue))
-		}
-		if !cmp.Equal(wantFound, haveFound) {
-			t.Error(cmp.Diff(wantFound, haveFound))
-		}
-	})
-	t.Run("slice of primitives", func(t *testing.T) {
-		vals := []int{1, 2, 3, 4, 5}
-
-		wantValue, wantFound := 1, true
-		haveValue, haveFound := slices.First(vals)
-
-		if !cmp.Equal(wantValue, haveValue) {
-			t.Error(cmp.Diff(wantValue, haveValue))
-		}
-		if !cmp.Equal(wantFound, haveFound) {
-			t.Error(cmp.Diff(wantFound, haveFound))
-		}
-	})
-	t.Run("slice of structures", func(t *testing.T) {
-		vals := []time.Time{
-			time.Now().Add(1 * time.Hour),
-			time.Now().Add(2 * time.Hour),
-			time.Now().Add(3 * time.Hour),
-			time.Now().Add(4 * time.Hour),
-			time.Now().Add(5 * time.Hour),
-		}
-
-		wantValue, wantFound := vals[0], true
-		haveValue, haveFound := slices.First(vals)
-
-		if !cmp.Equal(wantValue, haveValue) {
-			t.Error(cmp.Diff(wantValue, haveValue))
-		}
-		if !cmp.Equal(wantFound, haveFound) {
-			t.Error(cmp.Diff(wantFound, haveFound))
-		}
-	})
-	t.Run("slice of interfaces", func(t *testing.T) {
-		vals := []fmt.Stringer{
-			&url.URL{Scheme: "http", Host: "localhost"},
-			&url.URL{Scheme: "https", Host: "localhost"},
-		}
-
-		wantValue, wantFound := vals[0], true
-		haveValue, haveFound := slices.First(vals)
-
-		if !cmp.Equal(wantValue, haveValue) {
-			t.Error(cmp.Diff(wantValue, haveValue))
-		}
-		if !cmp.Equal(wantFound, haveFound) {
-			t.Error(cmp.Diff(wantFound, haveFound))
-		}
-	})
+			if !cmp.Equal(tc.wantValue, haveValue) {
+				t.Error(cmp.Diff(tc.wantValue, haveValue))
+			}
+			if !cmp.Equal(tc.wantFound, haveFound) {
+				t.Error(cmp.Diff(tc.wantFound, haveFound))
+			}
+		})
+	}
 }

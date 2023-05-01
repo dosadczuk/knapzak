@@ -1,8 +1,6 @@
 package slices_test
 
 import (
-	"fmt"
-	"net/netip"
 	"testing"
 
 	"github.com/dosadczuk/knapzak/slices"
@@ -10,76 +8,50 @@ import (
 )
 
 func TestAssociate(t *testing.T) {
-	t.Run("empty slice", func(t *testing.T) {
-		var vals []int
+	tt := map[string]struct {
+		// input
+		values    []int
+		transform func(int) (int, int)
+		// assert
+		want map[int]int
+	}{
+		"empty slice": {
+			values:    nil, // zero value
+			transform: func(val int) (int, int) { return val, 0 },
+			want:      nil, // zero value
+		},
+		"transform returns unique keys": {
+			values: []int{1, 2, 3, 4, 5},
+			transform: func(val int) (int, int) {
+				return val, val % 2
+			},
+			want: map[int]int{
+				1: 1,
+				2: 0,
+				3: 1,
+				4: 0,
+				5: 1,
+			},
+		},
+		"transform returns duplicated keys": {
+			values: []int{1, 2, 3, 4, 5},
+			transform: func(val int) (int, int) {
+				return val % 2, val
+			},
+			want: map[int]int{
+				0: 4,
+				1: 5,
+			},
+		},
+	}
 
-		var want map[int]int
-		have := slices.Associate(vals, func(val int) (int, int) { return val, 0 })
+	for name, tc := range tt {
+		t.Run(name, func(t *testing.T) {
+			have := slices.Associate(tc.values, tc.transform)
 
-		if !cmp.Equal(want, have) {
-			t.Error(cmp.Diff(want, have))
-		}
-	})
-	t.Run("slice of primitives", func(t *testing.T) {
-		vals := []int{1, 2, 3, 4, 5}
-
-		want := map[int]bool{
-			1: false,
-			2: true,
-			3: false,
-			4: true,
-			5: false,
-		}
-		have := slices.Associate(vals, func(val int) (int, bool) { return val, val%2 == 0 })
-
-		if !cmp.Equal(want, have) {
-			t.Error(cmp.Diff(want, have))
-		}
-	})
-	t.Run("slice of structures", func(t *testing.T) {
-		vals := []netip.Addr{
-			netip.AddrFrom4([4]byte{1, 0, 0, 0}),
-			netip.AddrFrom4([4]byte{2, 0, 0, 0}),
-		}
-
-		want := map[string]bool{
-			"1.0.0.0": true,
-			"2.0.0.0": true,
-		}
-		have := slices.Associate(vals, func(val netip.Addr) (string, bool) {
-			return val.String(), val.Is4()
-		})
-
-		if !cmp.Equal(want, have) {
-			t.Error(cmp.Diff(want, have))
-		}
-	})
-	t.Run("slice of interfaces", func(t *testing.T) {
-		vals := []fmt.Stringer{
-			netip.AddrFrom4([4]byte{1, 0, 0, 0}),
-			netip.AddrFrom4([4]byte{2, 0, 0, 0}),
-			netip.AddrFrom4([4]byte{3, 0, 0, 0}),
-			netip.AddrFrom4([4]byte{4, 0, 0, 0}),
-			netip.AddrFrom4([4]byte{5, 0, 0, 0}),
-		}
-
-		want := map[int]string{
-			331: "1.0.0.0",
-			332: "2.0.0.0",
-			333: "3.0.0.0",
-			334: "4.0.0.0",
-			335: "5.0.0.0",
-		}
-		have := slices.Associate(vals, func(val fmt.Stringer) (int, string) {
-			var key int
-			for _, char := range val.String() {
-				key += int(char)
+			if !cmp.Equal(tc.want, have) {
+				t.Error(cmp.Diff(tc.want, have))
 			}
-			return key, val.String()
 		})
-
-		if !cmp.Equal(want, have) {
-			t.Error(cmp.Diff(want, have))
-		}
-	})
+	}
 }

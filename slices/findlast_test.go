@@ -8,47 +8,44 @@ import (
 )
 
 func TestFindLast(t *testing.T) {
-	t.Run("empty slice", func(t *testing.T) {
-		var vals []int
+	tt := map[string]struct {
+		// input
+		values    []int
+		predicate func(int) bool
+		// assert
+		wantValue int
+		wantFound bool
+	}{
+		"empty slice": {
+			values:    nil, // zero value
+			predicate: func(_ int) bool { return true },
+			wantValue: 0,     // zero value
+			wantFound: false, // zero value
+		},
+		"slice with value matching predicate": {
+			values:    []int{1, 2, 3, 4, 5},
+			predicate: func(val int) bool { return val%2 == 0 },
+			wantValue: 4,
+			wantFound: true,
+		},
+		"slice with value not matching predicate": {
+			values:    []int{1, 2, 3, 4, 5},
+			predicate: func(val int) bool { return val < 0 },
+			wantValue: 0,     // zero value
+			wantFound: false, // zero value
+		},
+	}
 
-		wantValue, wantFound := 0, false
-		haveValue, haveFound := slices.FindLast(vals, func(val int) bool { return false })
+	for name, tc := range tt {
+		t.Run(name, func(t *testing.T) {
+			haveValue, haveFound := slices.FindLast(tc.values, tc.predicate)
 
-		if !cmp.Equal(wantValue, haveValue) {
-			t.Error(cmp.Diff(wantValue, haveValue))
-		}
-		if !cmp.Equal(wantFound, haveFound) {
-			t.Error(cmp.Diff(wantFound, haveFound))
-		}
-	})
-	t.Run("slice with value matching predicate", func(t *testing.T) {
-		vals := []int{1, 2, 3, 4, 5}
-
-		wantValue, wantFound := 4, true
-		haveValue, haveFound := slices.FindLast(vals, func(val int) bool {
-			return val%2 == 0
+			if !cmp.Equal(tc.wantValue, haveValue) {
+				t.Error(cmp.Diff(tc.wantValue, haveValue))
+			}
+			if !cmp.Equal(tc.wantFound, haveFound) {
+				t.Error(cmp.Diff(tc.wantFound, haveFound))
+			}
 		})
-
-		if !cmp.Equal(wantValue, haveValue) {
-			t.Error(cmp.Diff(wantValue, haveValue))
-		}
-		if !cmp.Equal(wantFound, haveFound) {
-			t.Error(cmp.Diff(wantFound, haveFound))
-		}
-	})
-	t.Run("slice with value not matching predicate", func(t *testing.T) {
-		vals := []int{1, 2, 3, 4, 5}
-
-		wantValue, wantFound := 0, false
-		haveValue, haveFound := slices.FindLast(vals, func(val int) bool {
-			return val < 0
-		})
-
-		if !cmp.Equal(wantValue, haveValue) {
-			t.Error(cmp.Diff(wantValue, haveValue))
-		}
-		if !cmp.Equal(wantFound, haveFound) {
-			t.Error(cmp.Diff(wantFound, haveFound))
-		}
-	})
+	}
 }

@@ -1,9 +1,6 @@
 package slices_test
 
 import (
-	"fmt"
-	"net/url"
-	"strings"
 	"testing"
 
 	"github.com/dosadczuk/knapzak/slices"
@@ -11,69 +8,46 @@ import (
 )
 
 func TestGroupBy(t *testing.T) {
-	t.Run("empty slice", func(t *testing.T) {
-		var vals []int
-
-		var want map[int][]int
-		have := slices.GroupBy(vals, func(val int) int { return val })
-
-		if !cmp.Equal(want, have) {
-			t.Error(cmp.Diff(want, have))
-		}
-	})
-	t.Run("slice of primitives", func(t *testing.T) {
-		vals := []int{1, 2, 3, 4}
-
-		want := map[int][]int{
-			0: {2, 4},
-			1: {1, 3},
-		}
-		have := slices.GroupBy(vals, func(val int) int { return val % 2 })
-
-		if !cmp.Equal(want, have) {
-			t.Error(cmp.Diff(want, have))
-		}
-	})
-	t.Run("slice of structures", func(t *testing.T) {
-		vals := []url.URL{
-			{Scheme: "http", Host: "localhost"},
-			{Scheme: "https", Host: "google.com"},
-			{Scheme: "https", Host: "vercel.com"},
-		}
-
-		want := map[string][]url.URL{
-			"http": {
-				{Scheme: "http", Host: "localhost"},
+	tt := map[string]struct {
+		// input
+		values   []int
+		selector func(int) int
+		// assert
+		want map[int][]int
+	}{
+		"empty slice": {
+			values:   nil, // zero value
+			selector: func(val int) int { return 0 },
+			want:     nil, // zero value
+		},
+		"selector returns unique keys": {
+			values:   []int{1, 2, 3, 4, 5},
+			selector: func(val int) int { return val },
+			want: map[int][]int{
+				1: {1},
+				2: {2},
+				3: {3},
+				4: {4},
+				5: {5},
 			},
-			"https": {
-				{Scheme: "https", Host: "google.com"},
-				{Scheme: "https", Host: "vercel.com"},
+		},
+		"selector returns duplicated keys": {
+			values:   []int{1, 2, 3, 4, 5},
+			selector: func(val int) int { return val % 2 },
+			want: map[int][]int{
+				1: {1, 3, 5},
+				0: {2, 4},
 			},
-		}
-		have := slices.GroupBy(vals, func(val url.URL) string { return val.Scheme })
+		},
+	}
 
-		if !cmp.Equal(want, have) {
-			t.Error(cmp.Diff(want, have))
-		}
-	})
-	t.Run("slice of interfaces", func(t *testing.T) {
-		vals := []fmt.Stringer{
-			&url.URL{Host: "localhost"},
-			&url.URL{Host: "google.com"},
-			&url.URL{Host: "vercel.com"},
-		}
+	for name, tc := range tt {
+		t.Run(name, func(t *testing.T) {
+			have := slices.GroupBy(tc.values, tc.selector)
 
-		want := map[byte][]fmt.Stringer{
-			'l': {&url.URL{Host: "localhost"}},
-			'g': {&url.URL{Host: "google.com"}},
-			'v': {&url.URL{Host: "vercel.com"}},
-		}
-		have := slices.GroupBy(vals, func(val fmt.Stringer) byte {
-			return strings.TrimPrefix(val.String(), "//")[0]
+			if !cmp.Equal(tc.want, have) {
+				t.Error(cmp.Diff(tc.want, have))
+			}
 		})
-
-		if !cmp.Equal(want, have) {
-			t.Error(cmp.Diff(want, have))
-		}
-	})
+	}
 }

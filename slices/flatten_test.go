@@ -1,8 +1,6 @@
 package slices_test
 
 import (
-	"fmt"
-	"net/url"
 	"testing"
 
 	"github.com/dosadczuk/knapzak/slices"
@@ -10,58 +8,41 @@ import (
 )
 
 func TestFlatten(t *testing.T) {
-	t.Run("empty slice", func(t *testing.T) {
-		var vals [][]int
+	tt := map[string]struct {
+		// input
+		values [][]int
+		// assert
+		want []int
+	}{
+		"empty slice": {
+			values: nil, // zero value
+			want:   nil, // zero value
+		},
+		"slice with sub-slice with value": {
+			values: [][]int{{1}},
+			want:   []int{1},
+		},
+		"slice with sub-slice with values": {
+			values: [][]int{{1, 2, 3, 4, 5}},
+			want:   []int{1, 2, 3, 4, 5},
+		},
+		"slice with sub-slices with value": {
+			values: [][]int{{1}, {2}, {3}, {4}, {5}},
+			want:   []int{1, 2, 3, 4, 5},
+		},
+		"slice with sub-slices with values": {
+			values: [][]int{{1, 2}, {3, 4}, {5}},
+			want:   []int{1, 2, 3, 4, 5},
+		},
+	}
 
-		var want []int
-		have := slices.Flatten(vals)
+	for name, tc := range tt {
+		t.Run(name, func(t *testing.T) {
+			have := slices.Flatten(tc.values)
 
-		if !cmp.Equal(want, have) {
-			t.Error(cmp.Diff(want, have))
-		}
-	})
-	t.Run("slice of primitives", func(t *testing.T) {
-		vals := [][]int{{1}, {1, 2}, {2, 3}}
-
-		want := []int{1, 1, 2, 2, 3}
-		have := slices.Flatten(vals)
-
-		if !cmp.Equal(want, have) {
-			t.Error(cmp.Diff(want, have))
-		}
-	})
-	t.Run("slice of structures", func(t *testing.T) {
-		vals := [][]url.URL{
-			{{Host: "google.com"}, {Host: "facebook.com"}},
-			{{Host: "localhost"}},
-			{{Host: "apple.com"}},
-		}
-
-		want := []url.URL{
-			{Host: "google.com"},
-			{Host: "facebook.com"},
-			{Host: "localhost"},
-			{Host: "apple.com"},
-		}
-		have := slices.Flatten(vals)
-
-		if !cmp.Equal(want, have) {
-			t.Error(cmp.Diff(want, have))
-		}
-	})
-	t.Run("slice of interfaces", func(t *testing.T) {
-		vals := [][]fmt.Stringer{
-			{&url.URL{Host: "google.com"}},
-			{&url.URL{Host: "localhost"}},
-		}
-		want := []fmt.Stringer{
-			&url.URL{Host: "google.com"},
-			&url.URL{Host: "localhost"},
-		}
-		have := slices.Flatten(vals)
-
-		if !cmp.Equal(want, have) {
-			t.Error(cmp.Diff(want, have))
-		}
-	})
+			if !cmp.Equal(tc.want, have) {
+				t.Error(cmp.Diff(tc.want, have))
+			}
+		})
+	}
 }

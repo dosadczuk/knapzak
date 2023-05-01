@@ -1,9 +1,6 @@
 package slices_test
 
 import (
-	"fmt"
-	"net/url"
-	"strings"
 	"testing"
 
 	"github.com/dosadczuk/knapzak/slices"
@@ -11,68 +8,62 @@ import (
 )
 
 func TestPartition(t *testing.T) {
-	t.Run("empty slice", func(t *testing.T) {
-		var vals []int
+	tt := map[string]struct {
+		// input
+		values    []int
+		predicate func(int) bool
+		// assert
+		wantT []int
+		wantF []int
+	}{
+		"empty slice": {
+			values:    nil, // zero value
+			predicate: func(_ int) bool { return true },
+			wantT:     nil, // zero value
+			wantF:     nil, // zero value
+		},
+		"predicate matching first element": {
+			values:    []int{1, 2, 3, 4, 5},
+			predicate: func(val int) bool { return val == 1 },
+			wantT:     []int{1},
+			wantF:     []int{2, 3, 4, 5},
+		},
+		"predicate matching middle element": {
+			values:    []int{1, 2, 3, 4, 5},
+			predicate: func(val int) bool { return val == 3 },
+			wantT:     []int{3},
+			wantF:     []int{1, 2, 4, 5},
+		},
+		"predicate matching last element": {
+			values:    []int{1, 2, 3, 4, 5},
+			predicate: func(val int) bool { return val == 5 },
+			wantT:     []int{5},
+			wantF:     []int{1, 2, 3, 4},
+		},
+		"predicate matching range of elements": {
+			values:    []int{1, 2, 3, 4, 5},
+			predicate: func(val int) bool { return val < 3 },
+			wantT:     []int{1, 2},
+			wantF:     []int{3, 4, 5},
+		},
+		"predicate not matching an element": {
+			values:    []int{1, 2, 3, 4, 5},
+			predicate: func(val int) bool { return val < 0 },
+			wantT:     nil, // zero value
+			wantF:     []int{1, 2, 3, 4, 5},
+		},
+	}
 
-		var wantT, wantF []int
-		haveT, haveF := slices.Partition(vals, func(val int) bool { return false })
+	for name, tc := range tt {
+		t.Run(name, func(t *testing.T) {
+			haveT, haveF := slices.Partition(tc.values, tc.predicate)
 
-		if !cmp.Equal(wantT, haveT) {
-			t.Error(cmp.Diff(wantT, haveT))
-		}
-		if !cmp.Equal(wantF, haveF) {
-			t.Error(cmp.Diff(wantF, haveF))
-		}
-	})
-	t.Run("slice of primitives", func(t *testing.T) {
-		vals := []int{1, 2, 3, 4, 5}
-
-		wantT, wantF := []int{4, 5}, []int{1, 2, 3}
-		haveT, haveF := slices.Partition(vals, func(val int) bool { return val > 3 })
-
-		if !cmp.Equal(wantT, haveT) {
-			t.Error(cmp.Diff(wantT, haveT))
-		}
-		if !cmp.Equal(wantF, haveF) {
-			t.Error(cmp.Diff(wantF, haveF))
-		}
-	})
-	t.Run("slice of structures", func(t *testing.T) {
-		vals := []url.URL{
-			{Scheme: "http", Host: "0.0.0.0"},
-			{Scheme: "https", Host: "0.0.0.0"},
-			{Scheme: "http", Host: "127.0.0.1"},
-			{Scheme: "https", Host: "127.0.0.1"},
-		}
-
-		wantT, wantF := []url.URL{vals[0], vals[2]}, []url.URL{vals[1], vals[3]}
-		haveT, haveF := slices.Partition(vals, func(addr url.URL) bool {
-			return addr.Scheme == "http"
+			if !cmp.Equal(tc.wantT, haveT) {
+				t.Error(cmp.Diff(tc.wantT, haveT))
+			}
+			if !cmp.Equal(tc.wantF, haveF) {
+				t.Error(cmp.Diff(tc.wantF, haveF))
+			}
 		})
-
-		if !cmp.Equal(wantT, haveT) {
-			t.Error(cmp.Diff(wantT, haveT))
-		}
-		if !cmp.Equal(wantF, haveF) {
-			t.Error(cmp.Diff(wantF, haveF))
-		}
-	})
-	t.Run("slice of interfaces", func(t *testing.T) {
-		vals := []fmt.Stringer{
-			&url.URL{Scheme: "http", Host: "localhost"},
-			&url.URL{Scheme: "https", Host: "localhost"},
-		}
-
-		wantT, wantF := []fmt.Stringer{vals[1]}, []fmt.Stringer{vals[0]}
-		haveT, haveF := slices.Partition(vals, func(val fmt.Stringer) bool {
-			return strings.HasPrefix(val.String(), "https")
-		})
-
-		if !cmp.Equal(wantT, haveT) {
-			t.Error(cmp.Diff(wantT, haveT))
-		}
-		if !cmp.Equal(wantF, haveF) {
-			t.Error(cmp.Diff(wantF, haveF))
-		}
-	})
+	}
 }

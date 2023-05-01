@@ -1,9 +1,6 @@
 package slices_test
 
 import (
-	"fmt"
-	"net/url"
-	"strings"
 	"testing"
 
 	"github.com/dosadczuk/knapzak/slices"
@@ -11,121 +8,73 @@ import (
 )
 
 func TestMin(t *testing.T) {
-	t.Run("empty slice", func(t *testing.T) {
-		var vals []int
+	tt := map[string]struct {
+		// input
+		values []int
+		// assert
+		want int
+	}{
+		"empty slice": {
+			values: nil, // zero value
+			want:   0,   // zero value
+		},
+		"slice with value": {
+			values: []int{1},
+			want:   1,
+		},
+		"slice with unique values": {
+			values: []int{3, 4, 2, 5, 1},
+			want:   1,
+		},
+		"slice with duplicate valued": {
+			values: []int{5, 5, 1, 1, 5, 5, 3, 4, 2, 6, 6, 3},
+			want:   1,
+		},
+	}
 
-		want := 0
-		have := slices.Min(vals)
+	for name, tc := range tt {
+		t.Run(name, func(t *testing.T) {
+			have := slices.Min(tc.values)
 
-		if !cmp.Equal(want, have) {
-			t.Error(cmp.Diff(want, have))
-		}
-	})
-	t.Run("slice with value", func(t *testing.T) {
-		vals := []int{3}
-
-		want := 3
-		have := slices.Min(vals)
-
-		if !cmp.Equal(want, have) {
-			t.Error(cmp.Diff(want, have))
-		}
-	})
-	t.Run("slice with values", func(t *testing.T) {
-		vals := []int{3, 2, 1, 4, 5}
-
-		want := 1
-		have := slices.Min(vals)
-
-		if !cmp.Equal(want, have) {
-			t.Error(cmp.Diff(want, have))
-		}
-	})
+			if !cmp.Equal(tc.want, have) {
+				t.Error(cmp.Diff(tc.want, have))
+			}
+		})
+	}
 }
 
 func TestMinFunc(t *testing.T) {
-	t.Run("empty slice", func(t *testing.T) {
-		var vals []int
+	tt := map[string]struct {
+		// input
+		values []int
+		// assert
+		want int
+	}{
+		"empty slice": {
+			values: nil, // zero value
+			want:   0,   // zero value
+		},
+		"slice with value": {
+			values: []int{1},
+			want:   1,
+		},
+		"slice with unique values": {
+			values: []int{3, 4, 2, 5, 1},
+			want:   1,
+		},
+		"slice with duplicate valued": {
+			values: []int{5, 5, 1, 1, 5, 5, 3, 4, 2, 6, 6, 3},
+			want:   1,
+		},
+	}
 
-		want := 0
-		have := slices.MinFunc(vals, func(a, b int) int { return a - b })
+	for name, tc := range tt {
+		t.Run(name, func(t *testing.T) {
+			have := slices.MinFunc(tc.values, func(a, b int) int { return a - b })
 
-		if !cmp.Equal(want, have) {
-			t.Error(cmp.Diff(want, have))
-		}
-	})
-	t.Run("slice of primitive", func(t *testing.T) {
-		vals := []int{3}
-
-		want := 3
-		have := slices.MinFunc(
-			vals,
-			func(a, b int) int {
-				if a == b {
-					return 0
-				}
-				if a < b {
-					return -1
-				} else {
-					return +1
-				}
-			},
-		)
-
-		if !cmp.Equal(want, have) {
-			t.Error(cmp.Diff(want, have))
-		}
-	})
-	t.Run("slice of primitives", func(t *testing.T) {
-		vals := []int{3, 2, 1, 4, 5}
-
-		want := 1
-		have := slices.MinFunc(
-			vals,
-			func(a, b int) int {
-				if a == b {
-					return 0
-				}
-				if a < b {
-					return -1
-				} else {
-					return +1
-				}
-			},
-		)
-
-		if !cmp.Equal(want, have) {
-			t.Error(cmp.Diff(want, have))
-		}
-	})
-	t.Run("slice of structures", func(t *testing.T) {
-		vals := []url.URL{
-			{Scheme: "http", Host: "localhost"},
-			{Scheme: "https", Host: "google.com"},
-		}
-
-		want := vals[0]
-		have := slices.MinFunc(vals, func(a, b url.URL) int {
-			return strings.Compare(a.Scheme, b.Scheme)
+			if !cmp.Equal(tc.want, have) {
+				t.Error(cmp.Diff(tc.want, have))
+			}
 		})
-
-		if !cmp.Equal(want, have) {
-			t.Error(cmp.Diff(want, have))
-		}
-	})
-	t.Run("slice of interfaces", func(t *testing.T) {
-		vals := []fmt.Stringer{
-			&url.URL{Scheme: "http", Host: "localhost"},
-			&url.URL{Scheme: "https", Host: "google.com"},
-		}
-
-		want := vals[0]
-		have := slices.MinFunc(vals, func(a, b fmt.Stringer) int {
-			return strings.Compare(a.String(), b.String())
-		})
-
-		if !cmp.Equal(want, have) {
-			t.Error(cmp.Diff(want, have))
-		}
-	})
+	}
 }

@@ -8,34 +8,37 @@ import (
 )
 
 func TestAll(t *testing.T) {
-	t.Run("empty slice", func(t *testing.T) {
-		var vals []int
+	tt := map[string]struct {
+		// input
+		values    []int
+		predicate func(int) bool
+		// assert
+		want bool
+	}{
+		"empty slice": {
+			values:    nil, // zero value
+			predicate: func(_ int) bool { return true },
+			want:      true,
+		},
+		"slice with values matching predicate": {
+			values:    []int{1, 2, 3, 4, 5},
+			predicate: func(val int) bool { return val > 0 },
+			want:      true,
+		},
+		"slice with values not matching predicate": {
+			values:    []int{1, 2, 3, 4, 5},
+			predicate: func(val int) bool { return val > 3 },
+			want:      false,
+		},
+	}
 
-		want := true
-		have := slices.All(vals, func(val int) bool { return false })
+	for name, tc := range tt {
+		t.Run(name, func(t *testing.T) {
+			have := slices.All(tc.values, tc.predicate)
 
-		if !cmp.Equal(want, have) {
-			t.Error(cmp.Diff(want, have))
-		}
-	})
-	t.Run("slice with values matching predicate", func(t *testing.T) {
-		vals := []int{1, 2, 3, 4, 5}
-
-		want := true
-		have := slices.All(vals, func(val int) bool { return val > 0 })
-
-		if !cmp.Equal(want, have) {
-			t.Error(cmp.Diff(want, have))
-		}
-	})
-	t.Run("slice with values not matching predicate", func(t *testing.T) {
-		vals := []int{1, 2, 3, 4, 5}
-
-		want := false
-		have := slices.All(vals, func(val int) bool { return val > 3 })
-
-		if !cmp.Equal(want, have) {
-			t.Error(cmp.Diff(want, have))
-		}
-	})
+			if !cmp.Equal(tc.want, have) {
+				t.Error(cmp.Diff(tc.want, have))
+			}
+		})
+	}
 }

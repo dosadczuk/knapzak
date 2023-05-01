@@ -1,66 +1,44 @@
 package slices_test
 
 import (
-	"fmt"
-	"net/netip"
 	"testing"
-	"time"
 
 	"github.com/dosadczuk/knapzak/slices"
 	"github.com/google/go-cmp/cmp"
 )
 
 func TestLastIndexOf(t *testing.T) {
-	t.Run("empty slice", func(t *testing.T) {
-		var vals []int
+	tt := map[string]struct {
+		// input
+		values []int
+		target int
+		// assert
+		want int
+	}{
+		"empty slice": {
+			values: nil, // zero value
+			target: 0,
+			want:   -1,
+		},
+		"slice with matching value": {
+			values: []int{1, 4, 3, 4, 5},
+			target: 4,
+			want:   3,
+		},
+		"slice with not matching value": {
+			values: []int{1, 2, 3, 4, 5},
+			target: 0,
+			want:   -1,
+		},
+	}
 
-		want := -1
-		have := slices.LastIndexOf(vals, 0)
+	for name, tc := range tt {
+		t.Run(name, func(t *testing.T) {
+			have := slices.LastIndexOf(tc.values, tc.target)
 
-		if !cmp.Equal(want, have) {
-			t.Error(cmp.Diff(want, have))
-		}
-	})
-	t.Run("slice of primitives", func(t *testing.T) {
-		vals := []int{1, 4, 3, 4, 5}
-
-		want := 3
-		have := slices.LastIndexOf(vals, 4)
-
-		if !cmp.Equal(want, have) {
-			t.Error(cmp.Diff(want, have))
-		}
-	})
-	t.Run("slice of structures", func(t *testing.T) {
-		vals := []time.Time{
-			time.Now().Add(1 * time.Hour),
-			time.Now().Add(2 * time.Hour),
-			time.Now().Add(3 * time.Hour),
-			time.Now().Add(4 * time.Hour),
-			time.Now().Add(5 * time.Hour),
-		}
-
-		want := -1
-		have := slices.LastIndexOf(vals, time.Now())
-
-		if !cmp.Equal(want, have) {
-			t.Error(cmp.Diff(want, have))
-		}
-	})
-	t.Run("slice of interfaces", func(t *testing.T) {
-		vals := []fmt.Stringer{
-			netip.AddrFrom4([4]byte{1, 0, 0, 0}),
-			netip.AddrFrom4([4]byte{2, 0, 0, 0}),
-			netip.AddrFrom4([4]byte{3, 0, 0, 0}),
-			netip.AddrFrom4([4]byte{4, 0, 0, 0}),
-			netip.AddrFrom4([4]byte{5, 0, 0, 0}),
-		}
-
-		want := 3
-		have := slices.LastIndexOf(vals, vals[3])
-
-		if !cmp.Equal(want, have) {
-			t.Error(cmp.Diff(want, have))
-		}
-	})
+			if !cmp.Equal(tc.want, have) {
+				t.Error(cmp.Diff(tc.want, have))
+			}
+		})
+	}
 }
