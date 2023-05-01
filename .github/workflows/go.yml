@@ -21,6 +21,9 @@ jobs:
         with:
           go-version: 1.20.x
 
+      - name: Unit test `algorithms`
+        run: cd algorithms && go test -v
+
       - name: Unit test `maps`
         run: cd maps && go test -v
 
