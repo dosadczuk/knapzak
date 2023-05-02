@@ -2,8 +2,7 @@ package slices
 
 // FoldRight returns accumulated value starting with the given initial value
 // and applying operation from right to left to current accumulator value.
-//
-// If there is no elements, returns initial value.
+// Returns initial value, if slice is empty.
 func FoldRight[S ~[]E, E any](vals S, initial E, operation func(acc E, val E) E) (acc E) {
 	if len(vals) == 0 {
 		return initial

@@ -1,11 +1,7 @@
 package slices
 
-import (
-	"golang.org/x/exp/constraints"
-)
-
 // Max returns the largest value from the elements.
-func Max[S ~[]E, E constraints.Ordered](vals S) (max E) {
+func Max[S ~[]E, E orderable](vals S) (max E) {
 	if len(vals) == 0 {
 		return
 	}

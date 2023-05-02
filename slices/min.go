@@ -1,11 +1,7 @@
 package slices
 
-import (
-	"golang.org/x/exp/constraints"
-)
-
 // Min returns the smallest value from the elements.
-func Min[S ~[]E, E constraints.Ordered](vals S) (min E) {
+func Min[S ~[]E, E orderable](vals S) (min E) {
 	if len(vals) == 0 {
 		return
 	}
