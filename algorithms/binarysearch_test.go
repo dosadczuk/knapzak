@@ -32,8 +32,14 @@ func TestBinarySearch(t *testing.T) {
 		"slice with not matching target": {
 			values:    []int{1, 2, 3, 4, 5},
 			target:    10,
-			wantIndex: 0,
+			wantIndex: 5,
 			wantFound: false,
+		},
+		"slice with duplicated values and matching target": {
+			values:    []int{1, 1, 1, 2, 3, 4, 5, 5, 5, 6, 7, 8},
+			target:    5,
+			wantIndex: 6,
+			wantFound: true,
 		},
 		"slice with not sorted values and matching target": {
 			values:    []int{3, 5, 2, 4, 1},
@@ -44,7 +50,7 @@ func TestBinarySearch(t *testing.T) {
 		"slice with not sorted values and not matching target": {
 			values:    []int{3, 5, 2, 4, 1},
 			target:    10,
-			wantIndex: 0,
+			wantIndex: 5,
 			wantFound: false,
 		},
 	}
@@ -99,8 +105,24 @@ func TestBinarySearchFunc(t *testing.T) {
 				netip.AddrFrom4([4]byte{5, 0, 0, 0}),
 			},
 			target:    netip.AddrFrom4([4]byte{127, 0, 0, 1}),
-			wantIndex: 0,
+			wantIndex: 5,
 			wantFound: false,
+		},
+		"slice with duplicated values and matching target": {
+			values: []netip.Addr{
+				netip.AddrFrom4([4]byte{1, 0, 0, 0}),
+				netip.AddrFrom4([4]byte{2, 0, 0, 0}),
+				netip.AddrFrom4([4]byte{3, 0, 0, 0}),
+				netip.AddrFrom4([4]byte{3, 0, 0, 0}),
+				netip.AddrFrom4([4]byte{3, 0, 0, 0}),
+				netip.AddrFrom4([4]byte{3, 0, 0, 0}),
+				netip.AddrFrom4([4]byte{3, 0, 0, 0}),
+				netip.AddrFrom4([4]byte{4, 0, 0, 0}),
+				netip.AddrFrom4([4]byte{5, 0, 0, 0}),
+			},
+			target:    netip.AddrFrom4([4]byte{3, 0, 0, 0}),
+			wantIndex: 2,
+			wantFound: true,
 		},
 		"slice with not sorted values and matching target": {
 			values: []netip.Addr{
@@ -123,7 +145,7 @@ func TestBinarySearchFunc(t *testing.T) {
 				netip.AddrFrom4([4]byte{1, 0, 0, 0}),
 			},
 			target:    netip.AddrFrom4([4]byte{127, 0, 0, 1}),
-			wantIndex: 0,
+			wantIndex: 5,
 			wantFound: false,
 		},
 	}

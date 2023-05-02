@@ -8,19 +8,19 @@ import (
 // The slice is expected to be sorted in ascending order, otherwise the
 // result is undefined.
 func BinarySearch[S ~[]E, E constraints.Ordered](vals S, target E) (idx int, found bool) {
-	l, r := 0, len(vals)-1
-	for l <= r {
+	n := len(vals)
+
+	l, r := 0, n
+	for l < r {
 		m := l + (r-l)/2
 
-		if val := vals[m]; val == target {
-			return m, true // found
-		} else if val < target {
+		if vals[m] < target {
 			l = m + 1 // search in right half
 		} else {
-			r = m - 1 // search in left half
+			r = m // search in left half
 		}
 	}
-	return
+	return l, l < n && vals[l] == target
 }
 
 // BinarySearchFunc returns index of the first element matching the given
@@ -33,17 +33,17 @@ func BinarySearch[S ~[]E, E constraints.Ordered](vals S, target E) (idx int, fou
 //	-1 - if the first argument is less than the second,
 //	+1 - if the second argument is less than the first.
 func BinarySearchFunc[S ~[]E, E, T any](vals S, target T, cmp func(E, T) int) (idx int, found bool) {
-	l, r := 0, len(vals)-1
-	for l <= r {
+	n := len(vals)
+
+	l, r := 0, n
+	for l < r {
 		m := l + (r-l)/2
 
-		if res := cmp(vals[m], target); res == 0 {
-			return m, true // found
-		} else if res < 0 {
+		if cmp(vals[m], target) < 0 {
 			l = m + 1 // search in right half
 		} else {
-			r = m - 1 // search in left half
+			r = m // search in left half
 		}
 	}
-	return
+	return l, l < n && cmp(vals[l], target) == 0
 }
