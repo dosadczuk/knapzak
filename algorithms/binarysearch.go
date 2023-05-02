@@ -1,13 +1,9 @@
 package algorithms
 
-import (
-	"golang.org/x/exp/constraints"
-)
-
 // BinarySearch returns index of the first element matching the target.
 // The slice is expected to be sorted in ascending order, otherwise the
 // result is undefined.
-func BinarySearch[S ~[]E, E constraints.Ordered](vals S, target E) (idx int, found bool) {
+func BinarySearch[S ~[]E, E orderable](vals S, target E) (idx int, found bool) {
 	n := len(vals)
 
 	l, r := 0, n
