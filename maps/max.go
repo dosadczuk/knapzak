@@ -1,11 +1,7 @@
 package maps
 
-import (
-	"golang.org/x/exp/constraints"
-)
-
 // Max returns the largest value from the map.
-func Max[M ~map[K]V, K comparable, V constraints.Ordered](vals M) (max V) {
+func Max[M ~map[K]V, K comparable, V orderable](vals M) (max V) {
 	if len(vals) == 0 {
 		return
 	}

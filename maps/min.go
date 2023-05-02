@@ -1,11 +1,7 @@
 package maps
 
-import (
-	"golang.org/x/exp/constraints"
-)
-
 // Min returns the smallest value from the map.
-func Min[M ~map[K]V, K comparable, V constraints.Ordered](vals M) (min V) {
+func Min[M ~map[K]V, K comparable, V orderable](vals M) (min V) {
 	if len(vals) == 0 {
 		return
 	}
